@@ -1,5 +1,14 @@
 @import './var.styl'
-
+@media (-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5)
+  .border-1px
+    &::after
+      -webkit-transform: scaleY(0.7)
+      transform: scaleY(0.7)
+@media (-webkit-min-device-pixel-ratio: 2),(min-device-pixel-ratio: 2)
+  .border-1px
+    &::after
+      -webkit-transform: scaleY(0.5)
+      transform: scaleY(0.5)
 body, html {
   line-height : 1
   font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif, 'Droid Sans Fallback'
@@ -7,4 +16,5 @@ body, html {
   -webkit-tap-highlight-color: transparent
   background: $background
   color: $color-content
+  font-size: $font-size-medium
 }

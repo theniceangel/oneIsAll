@@ -1,5 +1,5 @@
 require('./check-versions')()
-
+var axios = require('axios')
 var config = require('../config')
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
@@ -21,6 +21,16 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+var routers = express.Router()
+routers.get('/onelist/idlist', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/onelist/idlist'
+  axios.get(url).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+app.use('/api', routers)
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
