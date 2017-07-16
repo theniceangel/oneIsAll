@@ -1,0 +1,1 @@
+export const SET_CURRENT_DAYID = 'SET_CURRENT_DAYID'
