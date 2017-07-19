@@ -1,6 +1,7 @@
 require('./check-versions')()
 var axios = require('axios')
 var config = require('../config')
+
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
@@ -22,9 +23,21 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 var routers = express.Router()
+// 获取最近10天的idList
 routers.get('/onelist/idlist', function (req, res) {
   var url = 'http://v3.wufazhuce.com:8000/api/onelist/idlist'
   axios.get(url).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+// 根据id获取某一天的Home组件详情 /api/onelist/4287/
+routers.get('/onelist/:id/:cityName', function (req, res) {
+  // 通过fiddler抓包后发现，必须要待version参数，要不然返回的数据比实际数据少了一条
+  var url = 'http://v3.wufazhuce.com:8000/api/onelist/' + req.params.id + '/' + encodeURIComponent(req.params.cityName)+'?version=v4.2.2'
+  axios.get(url).then((response) => {
+    console.log(response.data)
     res.json(response.data)
   }).catch((e) => {
     console.log(e)

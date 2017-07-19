@@ -1,25 +1,36 @@
 <template>
   <div id="app">
-    <o-header></o-header>
-    <router-view></router-view>
+    <o-header v-show=""></o-header>
+    <keep-alive>
+      <router-view @scroll="getScrollPosition"></router-view>
+    </keep-alive>
     <o-footer></o-footer>
   </div>
 </template>
 
 <script>
-  import oHeader from 'components/OHeader/OHeader'
-  import oFooter from 'components/OFooter/OFooter'
+  import OHeader from 'components/o-header/o-header'
+  import OFooter from 'components/o-footer/o-footer'
+  import {mapGetters} from 'vuex'
   export default {
     name: 'app',
     created () {
-      this.test()
     },
     methods: {
-      test () {
-        this.$axios.get('/api/onelist/idlist')
-          .then((res) => {
-            console.log(res.data)
-          })
+      getScrollPosition (scrollY) {
+        console.log(scrollY)
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'currentPage'
+      ]),
+      isShow () {
+        let flag = true
+        if (this.currentPage === 0) {
+          flag = false
+        }
+        return flag
       }
     },
     data () {
@@ -27,18 +38,18 @@
       }
     },
     components: {
-      oHeader,
-      oFooter
+      OHeader,
+      OFooter
     }
   }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<style lang="stylus">
+  @import '~common/style/var.styl'
+  #app
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    text-align: center
+    color: #2c3e50
+    font-size $font-size-medium-s
 </style>

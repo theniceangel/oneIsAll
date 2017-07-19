@@ -1,1 +1,3 @@
-export const SET_CURRENT_DAYID = 'SET_CURRENT_DAYID'
+export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
+export const SET_CURRENT_DAY = 'SET_CURRENT_DAY'
+export const SET_ID_LIST = 'SET_ID_LIST'
