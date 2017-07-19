@@ -3,6 +3,7 @@
  * https://github.com/ustbhuangyi/storage
  */
 import storage from 'good-storage'
+import {initToastInstance} from './toast'
 import axios from 'axios'
 const ERROR_LIST = '__ERROR_LIST__'
 const errorHandler = (message, source, lineno, colno, error) => {
@@ -20,7 +21,10 @@ if (window.addEventListener) {
 }
 
 const install = (Vue, options) => {
+  // 注册axios
   Vue.prototype.$axios = axios
+  // 注册toast
+  Vue.prototype.$toast = initToastInstance
   // 如果是通过script引入，直接手动安装插件
   if (typeof window !== undefined && window.Vue) {
     Vue.use(install)
