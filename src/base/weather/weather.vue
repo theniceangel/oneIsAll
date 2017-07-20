@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <p>{{formatDate}}</p>
     <p>{{formatCityAndWeather}}</p>
   </div>

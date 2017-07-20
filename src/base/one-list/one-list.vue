@@ -1,8 +1,7 @@
 <!-- 该组件将四个导航页的列表进行抽象,封装在这个组件里面-->
 <template>
-  <div class="container">
-    <ul>
-      <li class="list-item" v-for="(item, index) in list">
+    <ul v-if="list.length">
+      <li class="list-item" :class="{'radio': item.category === '8'}" v-for="(item, index) in list">
         <!-- 如果是首页海报-->
         <template v-if="item.category === '0'">
           <div class="wrapper">
@@ -47,6 +46,7 @@
             <p class="article-content-title">{{item.title}}</p>
             <p class="article-content-author">{{getAuthor(item.category, item.author)}}</p>
             <div class="music-wrapper">
+              <img width="20" :src="getMusicOrigin(item.share_info.url)" alt="" class="music-origin">
               <div class="top-line"></div>
               <div class="bottom-line"></div>
               <div class="music-player">
@@ -55,6 +55,7 @@
               </div>
               <div class="rotate-text">STORIES OF MUSIC</div>
             </div>
+            <p class="music-info">{{item.music_name}}·{{item.audio_author}}|{{item.audio_album}}</p>
             <p class="article-forward">{{item.forward}}</p>
           </div>
           <bottom-operate :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
@@ -88,16 +89,17 @@
         <template v-if="item.category === '8'">
           <div class="radio-wrapper">
             <div class="title">深夜电台</div>
+            <div class="mask"></div>
             <img v-lazy="item.img_url" alt="">
-            <div class="bottom-info">
-              <div class="left">
-                <div class="border-wrapper">
+            <div class="bottom-info" >
+              <div class="left" >
+                <div class="border-wrapper" v-if="item.author.user_name">
                   <i class="icon-play"></i>
                 </div>
               </div>
               <div class="right">
                 <h3>{{item.title}}</h3>
-                <p>主播 / {{item.author.user_name}}</p>
+                <p>{{getAnchor(item.author.user_name)}}</p>
               </div>
             </div>
           </div>
@@ -106,12 +108,16 @@
           </div>
         </template>
       </li>
+      <!-- 切换到昨天 -->
+      <li class="prev-wrapper" v-if="list.length">
+        <img src="~common/images/prev.png" width="30%" alt="">
+      </li>
     </ul>
-  </div>
 </template>
 <script>
   import BottomOperate from 'base/bottom-operate/bottom-operate'
   import DashlineSvg from 'base/dashline-svg/dashline-svg'
+  import Loading from 'base/loading/loading'
   export default {
     props: {
       list: {
@@ -122,6 +128,8 @@
     data () {
       return {
       }
+    },
+    computed: {
     },
     methods: {
       getTitle (category) {
@@ -141,6 +149,17 @@
         }
         return `文 / ${author.user_name}`
       },
+      getAnchor (name) {
+        if (name) return `主播 / ${name}`
+      },
+      getMusicOrigin (musicUrl) {
+        console.log(musicUrl)
+        if (musicUrl.includes('xiami')) {
+          return require('../../common/images/xiami-logo.png')
+        }
+        return require('../../common/images/one-logo.png')
+      },
+      // 切换播放与暂停
       togglePlaying () {
         let playBtn = this.$refs.playBtn[0]
         if (playBtn.className.includes('icon-play')) {
@@ -154,7 +173,8 @@
     },
     components: {
       BottomOperate,
-      DashlineSvg
+      DashlineSvg,
+      Loading
     }
   }
 </script>
@@ -172,7 +192,7 @@
     &:first-child
       margin-top 0
       padding 0 0 15px
-    &:last-child
+    &.radio
       padding 0 0 15px
     .wrapper
       position relative
@@ -225,9 +245,14 @@
         color $color-content
         margin-bottom 15px
         text-align left
+        line-height 1.5
       .article-content-author
         color $color-desc
         text-align left
+      .music-info
+        margin-bottom 20px
+        text-align left
+        color $color-desc
       .image-wrapper
         margin 20px 0
         width 100%
@@ -253,6 +278,10 @@
         margin 20px 0
         position relative
         width 100%
+        .music-origin
+          left 0
+          position absolute
+          bottom 15px
         .music-player
           position relative
           margin 0 auto
@@ -316,6 +345,14 @@
       width 100%
       padding-bottom 53.3%
       position relative
+      .mask
+        position absolute
+        top 0
+        left 0
+        height 100%
+        width 100%
+        background-color rgba(0, 0, 0, 0.3)
+        z-index 4
       img
         position absolute
         top 0
@@ -334,6 +371,8 @@
         display flex
         align-items center
         position absolute
+        z-index 5
+        text-align center
         bottom 0
         left 0
         height 60px
@@ -365,4 +404,9 @@
     .space10
       margin-top  10px
       padding 0 12px
+  .prev-wrapper
+    padding 40px 0
+    width 100%
+    text-align center
+    background-color $background
 </style>
