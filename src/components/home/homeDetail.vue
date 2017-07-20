@@ -1,13 +1,13 @@
 <template>
-    <scroll :data="list" class="container">
-      <!-- 首页顶部->日期与天气模块-->
-      <div class="wrapper">
-        <div>
-          <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
-          <one-list :list="list"></one-list>
-        </div>
+  <scroll :data="list" class="container">
+    <!-- 首页顶部->日期与天气模块-->
+    <div class="wrapper">
+      <div>
+        <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
+        <one-list :list="list"></one-list>
       </div>
-    </scroll>
+    </div>
+  </scroll>
 </template>
 <script>
   import {mapGetters, mapActions} from 'vuex'
