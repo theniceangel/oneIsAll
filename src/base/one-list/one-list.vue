@@ -1,7 +1,7 @@
 <!-- 该组件将四个导航页的列表进行抽象,封装在这个组件里面-->
 <template>
     <ul v-if="list.length">
-      <li class="list-item" :class="{'radio': item.category === '8'}" v-for="(item, index) in list">
+      <li class="list-item" :class="{'radio': item.category === '8', 'poster': item.category === '0'}" v-for="(item, index) in list">
         <!-- 如果是首页海报-->
         <template v-if="item.category === '0'">
           <div class="wrapper">
@@ -29,7 +29,7 @@
             <p class="article-content-title">{{item.title}}</p>
             <p class="article-content-author">{{getAuthor(item.category, item.author, item.answerer)}}</p>
             <div class="image-wrapper">
-              <img v-lazy="item.img_url" alt="">
+              <img v-lazy="dealLazyReadImage(item.img_url)" alt="">
             </div>
             <p class="article-forward">{{item.forward}}</p>
           </div>
@@ -39,6 +39,7 @@
         <template v-if="item.category === '4'">
           <div class="article-header">
             <span class="divide-line"></span>
+              <span class="tag-list" v-if="item.tag_list.length > 0" v-for="it in item.tag_list">{{it.title}}</span>
               <span class="tag-list" v-if="!item.tag_list.length">{{getTitle(item.category)}}</span>
             <span class="divide-line"></span>
           </div>
@@ -50,7 +51,7 @@
               <div class="top-line"></div>
               <div class="bottom-line"></div>
               <div class="music-player">
-                <img class="playing-mode" v-lazy="item.img_url" alt="">
+                <img class="playing-mode" v-lazy="dealLazyMusicImage(item.img_url)" alt="">
                 <span @click="togglePlaying" class="play-wrapper"><i ref="playBtn" class="icon-play"></i></span>
               </div>
               <div class="rotate-text">STORIES OF MUSIC</div>
@@ -75,7 +76,7 @@
                 <!-- 这种虚线框只能通过svg去实现,只有通过svg才能控制虚线的间距-->
                 <dashline-svg></dashline-svg>
               </div>
-              <img class="video-image" v-lazy="item.img_url" alt="">
+              <img class="video-image" v-lazy="dealLazyVideoImage(item.img_url)" alt="">
               <div class="dashline-svg-bottom">
                 <dashline-svg></dashline-svg>
               </div>
@@ -90,7 +91,7 @@
           <div class="radio-wrapper">
             <div class="title">深夜电台</div>
             <div class="mask"></div>
-            <img v-lazy="item.img_url" alt="">
+            <img v-lazy="dealLazyVideoImage(item.img_url)" alt="">
             <div class="bottom-info" >
               <div class="left" >
                 <div class="border-wrapper" v-if="item.author.user_name">
@@ -107,10 +108,6 @@
             <bottom-operate :volume='item.volume' :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
           </div>
         </template>
-      </li>
-      <!-- 切换到昨天 -->
-      <li class="prev-wrapper" v-if="list.length">
-        <img src="~common/images/prev.png" width="30%" alt="">
       </li>
     </ul>
 </template>
@@ -135,6 +132,7 @@
       getTitle (category) {
         // 根据category,制定的类型映射表
         let titleMap = {
+          '1': '阅读',
           '2': '连载',
           '3': '问答',
           '4': '音乐',
@@ -153,11 +151,28 @@
         if (name) return `主播 / ${name}`
       },
       getMusicOrigin (musicUrl) {
-        console.log(musicUrl)
         if (musicUrl.includes('xiami')) {
           return require('../../common/images/xiami-logo.png')
         }
         return require('../../common/images/one-logo.png')
+      },
+      dealLazyReadImage (imgUrl) {
+        return {
+          src: imgUrl,
+          loading: require('../../common/images/one-read-onload.jpg')
+        }
+      },
+      dealLazyVideoImage (imgUrl) {
+        return {
+          src: imgUrl,
+          loading: require('../../common/images/one-video-onload.jpg')
+        }
+      },
+      dealLazyMusicImage (imgUrl) {
+        return {
+          src: imgUrl,
+          loading: require('../../common/images/one-music-onload.jpg')
+        }
       },
       // 切换播放与暂停
       togglePlaying () {
@@ -191,8 +206,9 @@
     padding 0 12px 15px
     &:first-child
       margin-top 0
-      padding 0 0 15px
     &.radio
+      padding 0 0 15px
+    &.poster
       padding 0 0 15px
     .wrapper
       position relative
@@ -404,9 +420,4 @@
     .space10
       margin-top  10px
       padding 0 12px
-  .prev-wrapper
-    padding 40px 0
-    width 100%
-    text-align center
-    background-color $background
 </style>

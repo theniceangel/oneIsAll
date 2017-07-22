@@ -1,9 +1,9 @@
 <template>
-  <div class="container border-1px">
-    <i class="icon-account"></i>
-    <div class="title">一个</div>
-    <i class="icon-search"></i>
-  </div>
+    <div class="container border-1px">
+      <i class="icon-account"></i>
+      <div class="title">一个</div>
+      <i class="icon-search"></i>
+    </div>
 </template>
 <script>
   export default {
@@ -21,8 +21,9 @@
     line-height 40px
     background-color: white
     padding 0 12px
+    z-index 10
     color $color-desc
-    border-1px($color-desc)
+    border-1px-bottom($color-desc)
     font-size $font-size-medium
     display flex
     i

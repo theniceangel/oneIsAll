@@ -22,5 +22,5 @@
     .desc
       line-height: 20px
       font-size: $font-size-medium-s
-      color: $color-content
+      color: $color-
 </style>

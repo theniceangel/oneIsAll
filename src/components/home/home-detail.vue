@@ -1,9 +1,6 @@
 <template>
-    <scroll
-      :data="list"
-      class="container"
-      :listenScroll="listenScroll"
-      @scroll="scroll">
+  <transition name="slide-left">
+    <scroll :data="list" class="container" :listenScroll="listenScroll">
       <!-- 首页顶部->日期与天气模块-->
       <div class="wrapper">
         <div>
@@ -16,9 +13,10 @@
         </div>
       </div>
     </scroll>
+  </transition>
 </template>
 <script>
-  import {mapGetters, mapActions, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   import Weather from 'base/weather/weather'
   import OneList from 'base/one-list/one-list'
   import Scroll from 'base/scroll/scroll'
@@ -33,42 +31,43 @@
       }
     },
     created () {
-      this.getIdList()
+      if (!this.currentId) {
+        this.$router.push({
+          path: '/home'
+        })
+      }
+      console.log('enter the detail')
+      this.getList()
     },
     methods: {
-      ...mapActions([
-        'initHome'
-      ]),
       ...mapMutations({
         'setCurrentDay': 'SET_CURRENT_DAY'
       }),
-      getIdList () {
-        let url = '/api/onelist/idlist'
+      getList () {
+        console.log(this.currentId)
+        // 获取当天的数据
+        let url = `/api/onelist/${this.currentId}/上海市`
         this.$axios.get(url).then((res) => {
-          let idList = res.data.data
-          // 获取最近10天的id数组
-          this.initHome({idList})
-        }).then(() => {
-          // 获取当天的数据
-          let url = `/api/onelist/${this.currentId}/上海市`
-          this.$axios.get(url).then((res) => {
-            let data = res.data.data
-            this.curDate = data.weather.date
-            this.weather = data.weather.climate
-            this.city = data.weather.city_name
-            this.list = data.content_list
-          })
+          let data = res.data.data
+          this.curDate = data.weather.date
+          this.weather = data.weather.climate
+          this.city = data.weather.city_name
+          this.list = data.content_list
         })
       },
       routerToYesterday () {
-        let index = Math.min((this.currentDay + 1), this.idList.length)
+        let index = Math.min((this.currentDay + 1), this.idList.length - 1)
         this.setCurrentDay(index)
         this.$router.push({
           path: `/homedetail/${this.currentId}`
         })
-      },
-      scroll (pos) {
-        this.$emit('scroll', pos)
+      }
+    },
+    watch: {
+      '$route' (to, from) {
+        // 因为首页点击上一个的时候，只需要更改id，查询对应的数据
+        // 对于组件来说，并不会被销毁,所以组件的生命周期钩子函数不会被调用
+        // 这里需要观察route的变化，来加载对应的数据
       }
     },
     computed: {
@@ -89,7 +88,7 @@
   @import '~common/style/var.styl'
   .container
     position fixed
-    top 40px
+    top 0
     width 100%
     z-index 2
     background-color $background
@@ -100,4 +99,8 @@
       width 100%
       text-align center
       background-color $background
+  .slide-left-enter-active
+    transition: all .5s
+  .slide-left-enter
+    transform translate3d(-100%, 0, 0)
 </style>
