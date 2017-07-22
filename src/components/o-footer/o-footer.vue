@@ -1,27 +1,37 @@
 <template>
-  <ul>
-    <li @click="selectItem(index)" v-for="(item, index) in liList" ><i :class="[item.className, currentIndex === index ? 'active' : '']"></i></li>
+  <ul class="border-1px">
+    <router-link tag="li"  v-for="(item, index) in liList" :to="item.routerPath" :key="item.index" >
+      <i @click='selectItem(index)' :class="[item.className]"></i>
+    </router-link>
   </ul>
 </template>
 <script>
+  import {mapMutations} from 'vuex'
   export default {
     data () {
       return {
         currentIndex: 0,
         liList: [{
-          className: 'icon-circle'
+          className: 'icon-circle',
+          routerPath: '/home'
         }, {
-          className: 'icon-book'
+          className: 'icon-book',
+          routerPath: '/read'
         }, {
-          className: 'icon-music'
+          className: 'icon-music',
+          routerPath: '/music'
         }, {
-          className: 'icon-video'
+          className: 'icon-video',
+          routerPath: '/movie'
         }]
       }
     },
     methods: {
+      ...mapMutations({
+        'setCurrentPage': 'SET_CURRENT_PAGE'
+      }),
       selectItem (index) {
-        this.currentIndex = index
+        this.setCurrentPage(index)
       }
     }
   }
@@ -33,9 +43,10 @@
     width 100%
     display flex
     height 50px
-    position fixed
     bottom 0
     left 0
+    position fixed!important
+    border-1px-top($color-desc)
     background-color white
     align-items: center
     justify-content: center
@@ -46,7 +57,8 @@
         align-content  center
         color $color-desc
         display inline-block
-        &.active
+      &.router-link-active
+        i
           font-size 28px
           color $color-content
 </style>

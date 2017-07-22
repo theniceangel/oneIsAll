@@ -33,6 +33,7 @@
     left:50%;
     transform: translate(-50%);
     font-size: 12px;
+    z-index: 999;
   }
   .enlarge-enter-active, .enlarge-leave-active {
     transition: opacity .5s ease-in;

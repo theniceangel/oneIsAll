@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <o-header v-show=""></o-header>
+    <o-header v-show="isShow"></o-header>
     <keep-alive>
-      <router-view @scroll="getScrollPosition"></router-view>
+      <router-view @scroll="scroll" :key="$route.path"></router-view>
     </keep-alive>
     <o-footer></o-footer>
   </div>
@@ -17,8 +17,10 @@
     created () {
     },
     methods: {
-      getScrollPosition (scrollY) {
-        console.log(scrollY)
+      scroll (pos) {
+        if (pos.y <= -40 && this.currentPage === 0) {
+          this.isShow = false
+        }
       }
     },
     computed: {
@@ -26,11 +28,7 @@
         'currentPage'
       ]),
       isShow () {
-        let flag = true
-        if (this.currentPage === 0) {
-          flag = false
-        }
-        return flag
+        return true
       }
     },
     data () {

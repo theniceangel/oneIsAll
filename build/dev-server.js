@@ -32,12 +32,38 @@ routers.get('/onelist/idlist', function (req, res) {
     console.log(e)
   })
 })
-// 根据id获取某一天的Home组件详情 /api/onelist/4287/
+// 根据id获取某一天的Home组件列表 /api/onelist/4287/
 routers.get('/onelist/:id/:cityName', function (req, res) {
   // 通过fiddler抓包后发现，必须要待version参数，要不然返回的数据比实际数据少了一条
   var url = 'http://v3.wufazhuce.com:8000/api/onelist/' + req.params.id + '/' + encodeURIComponent(req.params.cityName)+'?version=v4.2.2'
   axios.get(url).then((response) => {
-    console.log(response.data)
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+// 获取read组件下面的列表
+routers.get('/channel/reading/more/:id', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/channel/reading/more/'+ req.params.id + '?version=v4.2.2'
+  axios.get(url).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+// 获取music组件下面的列表
+routers.get('/channel/music/more/:id', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/channel/music/more/'+ req.params.id + '?version=v4.2.2'
+  axios.get(url).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+// 获取movie组件下面的列表
+routers.get('/channel/movie/more/:id', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/channel/movie/more/'+ req.params.id + '?version=v4.2.2'
+  axios.get(url).then((response) => {
     res.json(response.data)
   }).catch((e) => {
     console.log(e)
