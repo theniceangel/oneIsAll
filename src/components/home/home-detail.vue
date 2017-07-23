@@ -88,7 +88,7 @@
   @import '~common/style/var.styl'
   .container
     position fixed
-    top 0
+    top 40px
     width 100%
     z-index 2
     background-color $background

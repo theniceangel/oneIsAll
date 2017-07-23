@@ -8,5 +8,14 @@ export default {
   },
   [types.SET_ID_LIST] (state, idList) {
     state.idList = idList
+  },
+  [types.SET_PLAY_LIST] (state, list) {
+    state.playList = list
+  },
+  [types.SET_CURRENT_PLAY_INDEX] (state, index) {
+    state.currentPlayIndex = index
+  },
+  [types.SET_PLAYING_STATE] (state, flag) {
+    state.playingState = flag
   }
 }

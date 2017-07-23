@@ -69,3 +69,41 @@ exports.styleLoaders = function (options) {
   }
   return output
 }
+
+// 解析虾米音乐的真实播放路径
+exports.genRealPathOfXiami = function (location) {
+  // 凯撒数列
+  // loaction的值类似于下面的结构是
+  /**
+   * 5
+   h3%5co9%32E4316EpakDEb825af3525-n
+   tA2.dm32%F6%%65_3ued165cE%cb%9E%u
+   t%Fan%%F51%25_4l%ty72dee%5%457%5l
+   p2ol.251E%5FE8%.3h%%8dba5E5-E25El
+   %FmicFE9%5E1895mF_3515f%E2E11%E-
+   */
+  // 从上可以看出,第一个代表行数 n
+  // 每行字符串的个数等于(总字符串个数 - 1 ) / n
+  // 但是最后一行的字符数会少一个
+  // 然后竖起来读,会发现是个http://....地址,不过需要decode
+  var s = location.substring(1),
+      rows = Number(location.charAt(0)), // 行数
+      column = parseInt(location.length / rows), // 每行的字符串个数
+      ret = [],
+      urlArr = [], // 用来放散列的url单个字符串，最后join再生成url
+      httpUrl = '' // 最后解密出来的url地址
+  for (var i = 0; i < rows ; i++) {
+    let str = ''
+    str = s.substring(i * column, (i + 1) * column)
+    ret.push(str)
+  }
+  // 解密url地址
+  for (var i = 0; i < column; i++) {
+    for (var k = 0; k < ret.length; k++) {
+      urlArr.push(ret[k].charAt(i))
+    }
+  }
+  httpUrl = decodeURIComponent(urlArr.join('')).replace(/\^/ig, 0)
+  console.log(httpUrl)
+  return httpUrl
+}

@@ -75,7 +75,8 @@
       ...mapGetters([
         'currentId',
         'currentDay',
-        'idList'
+        'idList',
+        'playingState'
       ])
     },
     components: {

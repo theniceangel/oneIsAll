@@ -5,6 +5,8 @@
       <router-view @scroll="scroll" :key="$route.path"></router-view>
     </keep-alive>
     <o-footer></o-footer>
+    <!-- 播放器-->
+    <audio ref="audio" :src="currentSong.url" @play="ready" ></audio>
   </div>
 </template>
 
@@ -21,11 +23,16 @@
         if (pos.y <= -40 && this.currentPage === 0) {
           this.isShow = false
         }
+      },
+      ready () {
+        // 播放器准备开始播放
       }
     },
     computed: {
       ...mapGetters([
-        'currentPage'
+        'currentPage',
+        'currentSong',
+        'playingState'
       ]),
       isShow () {
         return true
@@ -33,6 +40,22 @@
     },
     data () {
       return {
+      }
+    },
+    watch: {
+      playingState (newPlayingState) {
+        const audio = this.$refs.audio
+        this.$nextTick(() => {
+          newPlayingState ? audio.play() : audio.pause()
+        })
+      },
+      currentSong (newSong, oldSong) {
+        if (newSong.id !== oldSong.id) {
+          const audio = this.$refs.audio
+          this.$nextTick(() => {
+            audio.play()
+          })
+        }
       }
     },
     components: {
