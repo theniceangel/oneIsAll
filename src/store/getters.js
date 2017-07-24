@@ -11,5 +11,11 @@ export default {
   },
   currentId (state) {
     return state.idList[state.currentDay]
+  },
+  currentSong (state) {
+    return state.playList[state.currentPlayIndex] || {}
+  },
+  playingState (state) {
+    return state.playingState
   }
 }

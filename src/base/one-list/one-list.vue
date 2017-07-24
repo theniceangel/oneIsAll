@@ -50,9 +50,9 @@
               <img width="20" :src="getMusicOrigin(item.share_info.url)" alt="" class="music-origin">
               <div class="top-line"></div>
               <div class="bottom-line"></div>
-              <div class="music-player">
-                <img class="playing-mode" v-lazy="dealLazyMusicImage(item.img_url)" alt="">
-                <span @click="togglePlaying" class="play-wrapper"><i ref="playBtn" class="icon-play"></i></span>
+              <div class="music-player" ref="musicImgWrapper">
+                <img ref="musicImg" :class="playingCls(item.audio_url)" @click="playingMusic(item.audio_url)"  v-lazy="dealLazyMusicImage(item.img_url)" alt="">
+                <span class="play-wrapper" ><i ref="playBtn" :class="getIconPlayingCls(item.audio_url)" ></i></span>
               </div>
               <div class="rotate-text">STORIES OF MUSIC</div>
             </div>
@@ -112,9 +112,11 @@
     </ul>
 </template>
 <script>
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import BottomOperate from 'base/bottom-operate/bottom-operate'
   import DashlineSvg from 'base/dashline-svg/dashline-svg'
   import Loading from 'base/loading/loading'
+  import {createSong} from 'common/js/class/song'
   export default {
     props: {
       list: {
@@ -127,8 +129,19 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'playingState',
+        'currentSong'
+      ])
     },
     methods: {
+      ...mapMutations({
+        'setPlayingState': 'SET_PLAYING_STATE',
+        'setPlayList': 'SET_PLAY_LIST'
+      }),
+      ...mapActions([
+        'playingMusicAction'
+      ]),
       getTitle (category) {
         // 根据category,制定的类型映射表
         let titleMap = {
@@ -174,16 +187,36 @@
           loading: require('../../common/images/one-music-onload.jpg')
         }
       },
-      // 切换播放与暂停
-      togglePlaying () {
-        let playBtn = this.$refs.playBtn[0]
-        if (playBtn.className.includes('icon-play')) {
-          playBtn.className = ''
-          playBtn.className = 'icon-pause'
-        } else {
-          playBtn.className = ''
-          playBtn.className = 'icon-play'
+      playingMusic (id) {
+        // 如果正在播放当前歌手,playingState切回false,表示暂停
+        if (this.currentSong.id === id && this.playingState) {
+          this.setPlayingState(false)
+          return
         }
+        let song = createSong(id)
+        song.initXiamiMusicInfo(id).then(() => {
+          this.playingMusicAction(song)
+        })
+      },
+      playingCls (id) {
+        if (this.currentSong.id === id && this.playingState) {
+          return 'playing-mode'
+        }
+        if (!this.$refs.musicImgWrapper) return
+        console.log(this.$refs.musicImgWrapper)
+        let musicImgWrapper = this.$refs.musicImgWrapper[this.$refs.musicImgWrapper.length - 1]
+        let img = this.$refs.musicImg[this.$refs.musicImg.length - 1]
+        let iTransform = getComputedStyle(img).transform
+        let wTransform = getComputedStyle(musicImgWrapper).transform
+        musicImgWrapper.style.transform = wTransform === 'none'
+          ? iTransform
+          : iTransform.concat(' ', wTransform)
+      },
+      getIconPlayingCls (id) {
+        if (this.currentSong.id === id && this.playingState) {
+          return 'icon-pause'
+        }
+        return 'icon-play'
       }
     },
     components: {
@@ -310,9 +343,12 @@
             height 100%
             border-radius 100%
             left 0
+            z-index 1
             top 0
             &.playing-mode
               animation: rotate 40s linear infinite
+            &.playing-pause
+              animation-play-state: paused
         .top-line
           width 50%
           height 1px
