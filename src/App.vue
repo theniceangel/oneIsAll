@@ -44,16 +44,16 @@
     },
     watch: {
       playingState (newPlayingState) {
-        const audio = this.$refs.audio
         this.$nextTick(() => {
-          newPlayingState ? audio.play() : audio.pause()
+          console.log('playingState')
+          newPlayingState ? this.$refs.audio.play() : this.$refs.audio.pause()
         })
       },
       currentSong (newSong, oldSong) {
         if (newSong.id !== oldSong.id) {
-          const audio = this.$refs.audio
           this.$nextTick(() => {
-            audio.play()
+            console.log('currentSong')
+            this.$refs.audio.play()
           })
         }
       }
