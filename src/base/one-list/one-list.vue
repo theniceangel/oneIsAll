@@ -51,7 +51,7 @@
               <div class="top-line"></div>
               <div class="bottom-line"></div>
               <div class="music-player" ref="musicImgWrapper">
-                <img ref="musicImg" :class="playingCls(item.audio_url)" @click="playingMusic(item.audio_url)"  v-lazy="dealLazyMusicImage(item.img_url)" alt="">
+                <img ref="musicImg"  :class="playingCls(item.audio_url, index)" @click="playingMusic(item.audio_url)"  v-lazy="dealLazyMusicImage(item.img_url)" alt="">
                 <span class="play-wrapper" ><i ref="playBtn" :class="getIconPlayingCls(item.audio_url)" ></i></span>
               </div>
               <div class="rotate-text">STORIES OF MUSIC</div>
@@ -198,14 +198,20 @@
           this.playingMusicAction(song)
         })
       },
-      playingCls (id) {
+      playingCls (id, index) {
         if (this.currentSong.id === id && this.playingState) {
           return 'playing-mode'
         }
         if (!this.$refs.musicImgWrapper) return
-        console.log(this.$refs.musicImgWrapper)
-        let musicImgWrapper = this.$refs.musicImgWrapper[this.$refs.musicImgWrapper.length - 1]
-        let img = this.$refs.musicImg[this.$refs.musicImg.length - 1]
+        let musicImgWrapper
+        let img
+        if (this.$refs.musicImgWrapper.length === 1) {
+          musicImgWrapper = this.$refs.musicImgWrapper[0]
+          img = this.$refs.musicImg[0]
+        } else {
+          musicImgWrapper = this.$refs.musicImgWrapper[index]
+          img = this.$refs.musicImg[index]
+        }
         let iTransform = getComputedStyle(img).transform
         let wTransform = getComputedStyle(musicImgWrapper).transform
         musicImgWrapper.style.transform = wTransform === 'none'

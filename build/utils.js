@@ -82,20 +82,39 @@ exports.genRealPathOfXiami = function (location) {
    p2ol.251E%5FE8%.3h%%8dba5E5-E25El
    %FmicFE9%5E1895mF_3515f%E2E11%E-
    */
-  // 从上可以看出,第一个代表行数 n
-  // 每行字符串的个数等于(总字符串个数 - 1 ) / n
-  // 但是最后一行的字符数会少一个
-  // 然后竖起来读,会发现是个http://....地址,不过需要decode
+    // 从上可以看出,第一个代表行数 n
+    // 每行字符串的个数等于(总字符串个数 - 1 ) / n
+    // 但是最后一行的字符数会少一个
+    // 然后竖起来读,会发现是个http://....地址,不过需要decode
   var s = location.substring(1),
-      rows = Number(location.charAt(0)), // 行数
-      column = parseInt(location.length / rows), // 每行的字符串个数
+      rows = Number(location.charAt(0)), // 总行数
+      // 每行的字符串个数,但是不能保证每行的字符串个数都一样，因为接口返回的location会动态变化
+      // 经过观察发现
+      // 前theFormer行的字符串个数是column个
+      // theLatter行的字符串个数是column-1个
+      column = Math.ceil((location.length - 1) / rows),
+      theFormer = s.length % rows,
+      theLatter = rows - theFormer,
       ret = [],
       urlArr = [], // 用来放散列的url单个字符串，最后join再生成url
       httpUrl = '' // 最后解密出来的url地址
-  for (var i = 0; i < rows ; i++) {
-    let str = ''
-    str = s.substring(i * column, (i + 1) * column)
-    ret.push(str)
+  if (theFormer === 0) {
+    for (var i = 0; i < theLatter; i++) {
+      let str = ''
+      str = s.substring(theFormer*column + i *column, theFormer*column + (i + 1) * column)
+      ret.push(str)
+    }
+  } else {
+    for (var i = 0; i < theFormer; i++) {
+      let str = ''
+      str = s.substring(i * column, (i + 1) * column)
+      ret.push(str)
+    }
+    for (var i = 0; i < theLatter; i++) {
+      let str = ''
+      str = s.substring(theFormer*column + i *(column - 1), theFormer*column + (i + 1) * (column - 1))
+      ret.push(str)
+    }
   }
   // 解密url地址
   for (var i = 0; i < column; i++) {
@@ -104,6 +123,5 @@ exports.genRealPathOfXiami = function (location) {
     }
   }
   httpUrl = decodeURIComponent(urlArr.join('')).replace(/\^/ig, 0)
-  console.log(httpUrl)
   return httpUrl
 }
