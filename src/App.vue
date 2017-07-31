@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <o-header v-show="isShow"></o-header>
+    <o-header></o-header>
     <keep-alive>
-      <router-view @scroll="scroll" :key="$route.path"></router-view>
+      <router-view :key="$route.path"></router-view>
     </keep-alive>
     <o-footer></o-footer>
     <!-- 播放器-->
@@ -16,14 +16,7 @@
   import {mapGetters} from 'vuex'
   export default {
     name: 'app',
-    created () {
-    },
     methods: {
-      scroll (pos) {
-        if (pos.y <= -40 && this.currentPage === 0) {
-          this.isShow = false
-        }
-      },
       ready () {
         // 播放器准备开始播放
       }
@@ -33,10 +26,7 @@
         'currentPage',
         'currentSong',
         'playingState'
-      ]),
-      isShow () {
-        return true
-      }
+      ])
     },
     data () {
       return {
@@ -46,6 +36,7 @@
       playingState (newPlayingState) {
         this.$nextTick(() => {
           console.log('playingState')
+          console.log(this.$refs.audio)
           newPlayingState ? this.$refs.audio.play() : this.$refs.audio.pause()
         })
       },

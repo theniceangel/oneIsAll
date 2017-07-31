@@ -47,12 +47,12 @@
             <p class="article-content-title">{{item.title}}</p>
             <p class="article-content-author">{{getAuthor(item.category, item.author)}}</p>
             <div class="music-wrapper">
+              <span class="play-wrapper" ><i ref="playBtn" :class="getIconPlayingCls(item.audio_url)" ></i></span>
               <img width="20" :src="getMusicOrigin(item.share_info.url)" alt="" class="music-origin">
               <div class="top-line"></div>
               <div class="bottom-line"></div>
               <div class="music-player" ref="musicImgWrapper">
                 <img ref="musicImg"  :class="playingCls(item.audio_url, index)" @click="playingMusic(item.audio_url)"  v-lazy="dealLazyMusicImage(item.img_url)" alt="">
-                <span class="play-wrapper" ><i ref="playBtn" :class="getIconPlayingCls(item.audio_url)" ></i></span>
               </div>
               <div class="rotate-text">STORIES OF MUSIC</div>
             </div>
@@ -379,10 +379,11 @@
           color #f2f2f2
         .play-wrapper
           position  absolute
-          top 42%
-          left 42%
-          width 16%
-          height 16%
+          top 50%
+          left 50%
+          transform translate(-50%, -50%)
+          width 30px
+          height 30px
           border-radius 100%
           background-color rgba(0, 0, 0, 0.6)
           z-index 3
