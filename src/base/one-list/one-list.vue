@@ -202,27 +202,31 @@
         if (this.currentSong.id === id && this.playingState) {
           return 'playing-mode'
         }
-        if (!this.$refs.musicImgWrapper) return
-        let musicImgWrapper
-        let img
-        if (this.$refs.musicImgWrapper.length === 1) {
-          musicImgWrapper = this.$refs.musicImgWrapper[0]
-          img = this.$refs.musicImg[0]
-        } else {
-          musicImgWrapper = this.$refs.musicImgWrapper[index]
-          img = this.$refs.musicImg[index]
-        }
-        let iTransform = getComputedStyle(img).transform
-        let wTransform = getComputedStyle(musicImgWrapper).transform
-        musicImgWrapper.style.transform = wTransform === 'none'
-          ? iTransform
-          : iTransform.concat(' ', wTransform)
+        this.$nextTick(() => {
+          this.syncTransformWrapper('musicImgWrapper', 'musicImg', index)
+        })
       },
       getIconPlayingCls (id) {
         if (this.currentSong.id === id && this.playingState) {
           return 'icon-pause'
         }
         return 'icon-play'
+      },
+      syncTransformWrapper (wrapperRef, imgRef, index) {
+        if (!this.$refs[wrapperRef]) return
+        let musicImgWrapper
+        let img
+        // 添加一个分支判断，用来判断home组件以及music组件下的音乐播放
+        if (this.$refs.musicImgWrapper.length === 1) {
+          musicImgWrapper = this.$refs.musicImgWrapper[0]
+          img = this.$refs.musicImg[0]
+        } else {
+          musicImgWrapper = this.$refs[wrapperRef][index]
+          img = this.$refs[imgRef][index]
+        }
+        let iTransform = getComputedStyle(img).transform
+        let wTransform = getComputedStyle(musicImgWrapper).transform
+        musicImgWrapper.style.transform = wTransform === 'none' ? iTransform : iTransform.concat(' ', wTransform)
       }
     },
     components: {
@@ -242,7 +246,7 @@
   .list-item
     margin-top 10px
     background-color white
-    padding 0 12px 15px
+    padding 0 24px 15px
     &:first-child
       margin-top 0
     &.radio

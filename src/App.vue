@@ -7,18 +7,30 @@
     <o-footer></o-footer>
     <!-- 播放器-->
     <audio ref="audio" :src="currentSong.url" @play="ready" ></audio>
+    <!-- 贴在右上角的圆形播放器缩略图-->
+    <circle-play @clickedCircle="changeShowInterface"></circle-play>
+    <!-- 播放界面-->
+    <play-interface :showInterface="showInterface" @hideInterface="hideInterface"></play-interface>
   </div>
 </template>
 
 <script>
   import OHeader from 'components/o-header/o-header'
   import OFooter from 'components/o-footer/o-footer'
+  import CirclePlay from 'components/circle-play/circle-play'
+  import PlayInterface from 'components/play-interface/play-interface'
   import {mapGetters} from 'vuex'
   export default {
     name: 'app',
     methods: {
       ready () {
         // 播放器准备开始播放
+      },
+      changeShowInterface () {
+        this.showInterface = true
+      },
+      hideInterface () {
+        this.showInterface = false
       }
     },
     computed: {
@@ -30,6 +42,7 @@
     },
     data () {
       return {
+        showInterface: false
       }
     },
     watch: {
@@ -51,7 +64,9 @@
     },
     components: {
       OHeader,
-      OFooter
+      OFooter,
+      CirclePlay,
+      PlayInterface
     }
   }
 </script>
