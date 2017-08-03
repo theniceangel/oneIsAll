@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-left">
-    <scroll :data="list" class="container" :listenScroll="listenScroll">
+    <scroll :data="list" class="container" :listenScroll="listenScroll" v-show="list.length">
       <!-- 首页顶部->日期与天气模块-->
       <div class="wrapper">
         <div>

@@ -4,5 +4,6 @@ export default {
   currentDay: 0, // 表示第几天，0代表当天,9代表9天前
   playList: [], // 存放要播放的歌单
   currentPlayIndex: 0, // 正在播放的歌曲的索引
-  playingState: false // 播放状态
+  playingState: false, // 播放状态
+  playingMode: 0 // 0为顺序播放，1为循环播放
 }

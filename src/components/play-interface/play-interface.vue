@@ -11,15 +11,23 @@
             <div class="circle"></div>
           </div>
           <p class="time">
-            <span class="current-time">0:00</span>
+            <span class="current-time">{{curTime}}</span>
             <span class="space"></span>
-            <span class="remaining-time">-3.56</span>
+            <span class="remaining-time">-{{remainingTime}}</span>
           </p>
           <p class="singer">{{currentSong.singers}}</p>
           <div class="btn-grounp">
-            <div class="prev"><i class="icon-backwardfill"></i></div>
-            <div class="play"><i :class="cls"></i></div>
-            <div class="next"><i class="icon-play_forward_fill"></i></div>
+            <span class="prev"><i class="icon-backwardfill"></i></span>
+            <span class="play" @click.stop="togglePlay"><i :class="cls"></i></span>
+            <span class="next"><i class="icon-play_forward_fill"></i></span>
+          </div>
+          <div class="bottom">
+            <span class="mode" @click.stop="setPlayingMode"><i :class="modeCls"></i></span>
+            <span class="origin"><img  width="14" src="~common/images/xiami-logo.png" alt="">来自虾米音乐</span>
+            <span class="add-and-turn">
+              <i class="icon-plus-square"></i>
+              <i class="icon-share"></i>
+            </span>
           </div>
         </div>
       </transition>
@@ -27,12 +35,16 @@
   </transition>
 </template>
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     props: {
       showInterface: {
         type: Boolean,
         default: false
+      },
+      currentTime: {
+        type: Number,
+        default: 0
       }
     },
     data () {
@@ -42,16 +54,42 @@
     computed: {
       ...mapGetters([
         'currentSong',
-        'playingState'
+        'playingState',
+        'playingMode'
       ]),
       cls () {
-        let cls = this.playingState ? 'icon-pause' : 'icon-play'
+        let cls = this.playingState ? 'icon-playfill' : 'icon-stop'
         return cls
+      },
+      modeCls () {
+        let cls = this.playingMode === 0 ? 'icon-sequence' : 'icon-loop'
+        return cls
+      },
+      curTime () {
+        let curTime = Math.ceil(this.currentTime)
+        return this._padTime(curTime)
+      },
+      remainingTime () {
+        let totalTime = this.currentSong.duration
+        let remaining = totalTime - Math.ceil(this.currentTime)
+        return this._padTime(remaining)
       }
     },
     methods: {
+      ...mapMutations({
+        setPlayingMode: 'SET_PLAYING_MODE',
+        setPlayingState: 'SET_PLAYING_STATE'
+      }),
       hide () {
         this.$emit('hideInterface')
+      },
+      togglePlay () {
+        this.setPlayingState(!this.playingState)
+      },
+      _padTime (time) {
+        let min = (time / 60 | 0).toString()
+        let sec = (time % 60).toString().padStart(2, 0)
+        return `${min}:${sec}`
       }
     }
   }
@@ -71,7 +109,7 @@
       position absolute
       top 0
       left 0
-      padding 0 24px 24px
+      padding 0 24px 16px
       box-sizing border-box
       background-color white
       width 100%
@@ -113,6 +151,32 @@
         display flex
         .space
           flex 1
+      .singer
+        font-size $font-size-small
+        margin-bottom 20px
+      .btn-grounp
+        span
+          margin 0 10px
+          text-align center
+          i
+            font-size 24px
+            color black
+      .bottom
+        margin-top 5px
+        display flex
+        .mode
+          width 28px
+        .origin
+          flex 1
+          display flex
+          align-items center
+          justify-content center
+          img
+            margin 1px 4px 0 0
+        .icon-plus-square
+          margin-right 15px
+        i
+          font-size 24px
   .slider-down-enter-active, .slider-down-leave-active {
     transition all .3s cubic-bezier(.04,.6,.58,.84)
   }

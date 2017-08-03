@@ -6,11 +6,11 @@
     </keep-alive>
     <o-footer></o-footer>
     <!-- 播放器-->
-    <audio ref="audio" :src="currentSong.url" @play="ready" ></audio>
+    <audio ref="audio" :src="currentSong.url" @play="ready" @timeupdate="updateTime"></audio>
     <!-- 贴在右上角的圆形播放器缩略图-->
     <circle-play @clickedCircle="changeShowInterface"></circle-play>
     <!-- 播放界面-->
-    <play-interface :showInterface="showInterface" @hideInterface="hideInterface"></play-interface>
+    <play-interface :showInterface="showInterface" @hideInterface="hideInterface" :currentTime="currentTime"></play-interface>
   </div>
 </template>
 
@@ -31,6 +31,9 @@
       },
       hideInterface () {
         this.showInterface = false
+      },
+      updateTime (e) {
+        this.currentTime = e.target.currentTime
       }
     },
     computed: {
@@ -42,7 +45,8 @@
     },
     data () {
       return {
-        showInterface: false
+        showInterface: false,
+        currentTime: 0 // 设置当前音乐播放到哪个时间点了
       }
     },
     watch: {

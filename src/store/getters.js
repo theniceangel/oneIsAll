@@ -17,5 +17,8 @@ export default {
   },
   playingState (state) {
     return state.playingState
+  },
+  playingMode (state) {
+    return state.playingMode
   }
 }

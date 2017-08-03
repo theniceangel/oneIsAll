@@ -208,9 +208,9 @@
       },
       getIconPlayingCls (id) {
         if (this.currentSong.id === id && this.playingState) {
-          return 'icon-pause'
+          return 'icon-stop'
         }
-        return 'icon-play'
+        return 'icon-playfill'
       },
       syncTransformWrapper (wrapperRef, imgRef, index) {
         if (!this.$refs[wrapperRef]) return

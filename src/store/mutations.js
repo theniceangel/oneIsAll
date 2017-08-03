@@ -17,5 +17,8 @@ export default {
   },
   [types.SET_PLAYING_STATE] (state, flag) {
     state.playingState = flag
+  },
+  [types.SET_PLAYING_MODE] (state) {
+    state.playingMode = state.playingMode === 0 ? 1 : 0
   }
 }
