@@ -40,7 +40,7 @@
           let code = res.data.res
           let data = res.data.data
           if (code === 0) {
-            this.list = data
+            this.list = this._normalizeList(data)
           }
         })
       },
@@ -55,12 +55,20 @@
           let code = res.data.res
           let data = res.data.data
           if (code === 0) {
-            this.list = this.list.concat(data)
+            this.list = this.list.concat(this._normalizeList(data))
             if (!data[data.length - 1].id) { // 如果查出来的最后一条数据不存在id, 说明数据已经全部查询出来
               this.hasMore = false
             }
           }
         })
+      },
+      _normalizeList (data) { // 去除非来自虾米音乐的音乐
+        data.forEach((item, index) => {
+          if (item.category === '4' && item.audio_url.includes('http')) {
+            data.splice(index, 1)
+          }
+        })
+        return data
       }
     },
     components: {
