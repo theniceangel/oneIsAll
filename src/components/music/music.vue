@@ -9,7 +9,7 @@
     >
       <div>
         <one-list :list="list"  ></one-list>
-        <loading v-show="hasMore" title="正在挣扎..."></loading>
+        <loading v-show="hasMore" title="正在加载..."></loading>
       </div>
     </scroll>
   </div>

@@ -6,11 +6,11 @@
     </keep-alive>
     <o-footer></o-footer>
     <!-- 播放器-->
-    <audio ref="audio" :src="currentSong.url" @play="ready" @timeupdate="updateTime"></audio>
+    <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @ended="end" @timeupdate="updateTime"></audio>
     <!-- 贴在右上角的圆形播放器缩略图-->
     <circle-play @clickedCircle="changeShowInterface"></circle-play>
     <!-- 播放界面-->
-    <play-interface :showInterface="showInterface" @hideInterface="hideInterface" :currentTime="currentTime"></play-interface>
+    <play-interface :showInterface="showInterface" @percentChange="updatePercent"  @hideInterface="hideInterface" :currentTime="currentTime"></play-interface>
   </div>
 </template>
 
@@ -26,6 +26,16 @@
       ready () {
         // 播放器准备开始播放
       },
+      end () {
+        if (this.playList.length === 1) {
+          this.loop()
+        }
+      },
+      loop () {
+        const audio = this.$refs.audio
+        audio.currentTime = 0
+        audio.play()
+      },
       changeShowInterface () {
         this.showInterface = true
       },
@@ -34,34 +44,42 @@
       },
       updateTime (e) {
         this.currentTime = e.target.currentTime
+      },
+      error (e) {
+        console.log(e)
+      },
+      updatePercent (percent) {
+        const audio = this.$refs.audio
+        audio.currentTime = this.currentSong.duration * percent
       }
     },
     computed: {
       ...mapGetters([
         'currentPage',
         'currentSong',
-        'playingState'
+        'playingState',
+        'playingMode',
+        'playList'
       ])
     },
     data () {
       return {
-        showInterface: false,
+        showInterface: false, // 控制播放器页面的显隐
         currentTime: 0 // 设置当前音乐播放到哪个时间点了
       }
     },
     watch: {
       playingState (newPlayingState) {
-        this.$nextTick(() => {
-          console.log('playingState')
-          console.log(this.$refs.audio)
-          newPlayingState ? this.$refs.audio.play() : this.$refs.audio.pause()
-        })
+        const audio = this.$refs.audio
+        setTimeout(() => {
+          newPlayingState ? audio.play() : audio.pause()
+        }, 17)
       },
       currentSong (newSong, oldSong) {
         if (newSong.id !== oldSong.id) {
           this.$nextTick(() => {
-            console.log('currentSong')
-            this.$refs.audio.play()
+            const audio = this.$refs.audio
+            audio.play()
           })
         }
       }

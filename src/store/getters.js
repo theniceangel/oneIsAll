@@ -20,5 +20,8 @@ export default {
   },
   playingMode (state) {
     return state.playingMode
+  },
+  playList (state) {
+    return state.playList
   }
 }

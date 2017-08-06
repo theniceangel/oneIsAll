@@ -6,9 +6,13 @@
           <div class="song-name">{{currentSong.name}}</div>
           <!-- 进度条-->
           <div class="progress-bar-wrapper">
-            <div class="grey-line"></div>
-            <div class="black-line"></div>
-            <div class="circle"></div>
+            <!-- 音乐总的音轨长-->
+            <div @click.stop="forward" class="track-wrapper">
+              <div ref="totalTrack"  class="grey-line"></div>
+              <!-- 音乐当前播放的音轨长-->
+              <div ref="currentTrack" class="black-line"></div>
+              <div ref="circle" class="circle" @touchstart.prevent="progressStart" @touchmove.prevent="progressMove" @touchend.prevent="progressEnd"></div>
+            </div>
           </div>
           <p class="time">
             <span class="current-time">{{curTime}}</span>
@@ -17,9 +21,9 @@
           </p>
           <p class="singer">{{currentSong.singers}}</p>
           <div class="btn-grounp">
-            <span class="prev"><i class="icon-backwardfill"></i></span>
+            <span class="prev" v-if="showPrevAndNext"><i class="icon-backwardfill"></i></span>
             <span class="play" @click.stop="togglePlay"><i :class="cls"></i></span>
-            <span class="next"><i class="icon-play_forward_fill"></i></span>
+            <span class="next" v-if="showPrevAndNext"><i class="icon-play_forward_fill"></i></span>
           </div>
           <div class="bottom">
             <span class="mode" @click.stop="setPlayingMode"><i :class="modeCls"></i></span>
@@ -51,14 +55,18 @@
       return {
       }
     },
+    created () {
+      this.touch = {}
+    },
     computed: {
       ...mapGetters([
         'currentSong',
         'playingState',
-        'playingMode'
+        'playingMode',
+        'playList'
       ]),
       cls () {
-        let cls = this.playingState ? 'icon-playfill' : 'icon-stop'
+        let cls = this.playingState ? 'icon-stop' : 'icon-playfill'
         return cls
       },
       modeCls () {
@@ -66,13 +74,20 @@
         return cls
       },
       curTime () {
-        let curTime = Math.ceil(this.currentTime)
+        let curTime = Math.floor(this.currentTime)
         return this._padTime(curTime)
       },
       remainingTime () {
         let totalTime = this.currentSong.duration
-        let remaining = totalTime - Math.ceil(this.currentTime)
+        let remaining = totalTime - Math.floor(this.currentTime)
         return this._padTime(remaining)
+      },
+      showPrevAndNext () {
+        let flag = false
+        if (this.playList.length > 1) {
+          flag = true
+        }
+        return flag
       }
     },
     methods: {
@@ -90,6 +105,55 @@
         let min = (time / 60 | 0).toString()
         let sec = (time % 60).toString().padStart(2, 0)
         return `${min}:${sec}`
+      },
+      updateProgressTrack (percent) {
+        let totalTrack = this.$refs.totalTrack
+        let currentTrack = this.$refs.currentTrack
+        let circle = this.$refs.circle
+        let delta = totalTrack.clientWidth * percent
+        this._offsetWidth(currentTrack, circle, delta)
+      },
+      forward (e) {
+        let totalTrack = this.$refs.totalTrack
+        let currentTrack = this.$refs.currentTrack
+        let pageX = e.pageX
+        let delta = pageX - totalTrack.getBoundingClientRect().left
+        let circle = this.$refs.circle
+        let percent = delta / totalTrack.clientWidth
+        this._offsetWidth(currentTrack, circle, delta)
+        this.$emit('percentChange', percent)
+      },
+      _offsetWidth (currentTrack, circle, offsetWidth) {
+        currentTrack.style.width = `${offsetWidth}px`
+        circle.style.left = `${offsetWidth - 4}px`
+      },
+      progressStart (e) {
+        let currentTrack = this.$refs.currentTrack
+        this.touch.init = true
+        let touch = e.touches[0]
+        this.touch.startX = touch.pageX
+        this.touch.offsetWidth = currentTrack.offsetWidth
+      },
+      progressMove (e) {
+        if (!this.touch.init) return
+        let totalTrack = this.$refs.totalTrack
+        let touch = e.touches[0]
+        let deltaX = touch.pageX - this.touch.startX
+        console.log('偏移量' + deltaX)
+        console.log('当前音轨的长度' + this.touch.offsetWidth)
+        this.touch.percent = Math.max(0, Math.min((this.touch.offsetWidth + deltaX), totalTrack.offsetWidth)) / totalTrack.offsetWidth
+        console.log('percent' + this.touch.percent)
+        this.$emit('percentChange', this.touch.percent)
+      },
+      progressEnd (e) {
+        this.touch.init = false
+        this.$emit('percentChange', this.touch.percent)
+      }
+    },
+    watch: {
+      currentTime (newTime, oldTime) {
+        let percent = newTime / this.currentSong.duration
+        this.updateProgressTrack(percent)
       }
     }
   }
@@ -119,33 +183,40 @@
         font-size $font-size-medium-s
       .progress-bar-wrapper
         height 2px
-        background-color wheat
         width 100%
         position relative
-        .grey-line
-          position absolute
-          top 0
-          left 0
+        .track-wrapper
+          height 100%
           width 100%
-          height 100%
-          background-color #eaeaea
-          border-radius 2px
-        .black-line
           position absolute
-          top 0
+          display flex
+          align-items center
           left 0
-          width 50%
-          height 100%
-          background-color black
-          border-radius 2px
-        .circle
-          position absolute
-          top -3px
-          left -4px
-          width 8px
-          height 8px
-          background-color black
-          border-radius 100%
+          top 0
+          padding 5px 0
+          .grey-line
+            position absolute
+            top 0
+            left 0
+            width 100%
+            height 2px
+            background-color #eaeaea
+            border-radius 2px
+          .black-line
+            position absolute
+            top 0
+            left 0
+            height 2px
+            background-color black
+            border-radius 2px
+          .circle
+            position absolute
+            top -3px
+            left -4px
+            width 8px
+            height 8px
+            background-color black
+            border-radius 100%
       .time
         margin-top 5px
         display flex
