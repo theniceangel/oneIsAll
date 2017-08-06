@@ -47,12 +47,12 @@
             <p class="article-content-title">{{item.title}}</p>
             <p class="article-content-author">{{getAuthor(item.category, item.author)}}</p>
             <div class="music-wrapper">
-              <span class="play-wrapper" ><i ref="playBtn" :class="getIconPlayingCls(item.audio_url)" ></i></span>
-              <img width="20" :src="getMusicOrigin(item.share_info.url)" alt="" class="music-origin">
+              <span class="play-wrapper needsclick" @click.stop="playingMusic(item.audio_url)"><i ref="playBtn" :class="getIconPlayingCls(item.audio_url)" ></i></span>
+              <img width="20"  :src="getMusicOrigin(item.share_info.url)" alt="" class="music-origin">
               <div class="top-line"></div>
               <div class="bottom-line"></div>
               <div class="music-player" ref="musicImgWrapper">
-                <img ref="musicImg"  :class="playingCls(item.audio_url, index)" @click="playingMusic(item.audio_url)"  v-lazy="dealLazyMusicImage(item.img_url)" alt="">
+                <img ref="musicImg"   :class="playingCls(item.audio_url, index)"   v-lazy="dealLazyMusicImage(item.img_url)" alt="">
               </div>
               <div class="rotate-text">STORIES OF MUSIC</div>
             </div>
@@ -217,9 +217,9 @@
         let musicImgWrapper
         let img
         // 添加一个分支判断，用来判断home组件以及music组件下的音乐播放
-        if (this.$refs.musicImgWrapper.length === 1) {
-          musicImgWrapper = this.$refs.musicImgWrapper[0]
-          img = this.$refs.musicImg[0]
+        if (this.$refs[wrapperRef].length === 1) {
+          musicImgWrapper = this.$refs[wrapperRef][0]
+          img = this.$refs[imgRef][0]
         } else {
           musicImgWrapper = this.$refs[wrapperRef][index]
           img = this.$refs[imgRef][index]
