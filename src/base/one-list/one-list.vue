@@ -202,7 +202,9 @@
         if (this.currentSong.id === id && this.playingState) {
           return 'playing-mode'
         }
-        this.syncTransformWrapper('musicImgWrapper', 'musicImg', index)
+        this.$nextTick(() => {
+          this.syncTransformWrapper('musicImgWrapper', 'musicImg', index)
+        })
       },
       getIconPlayingCls (id) {
         if (this.currentSong.id === id && this.playingState) {
@@ -222,11 +224,9 @@
           musicImgWrapper = this.$refs[wrapperRef][index]
           img = this.$refs[imgRef][index]
         }
-        this.$nextTick(() => {
-          let iTransform = getComputedStyle(img).transform
-          let wTransform = getComputedStyle(musicImgWrapper).transform
-          musicImgWrapper.style.transform = wTransform === 'none' ? iTransform : iTransform.concat(' ', wTransform)
-        })
+        let iTransform = getComputedStyle(img).transform
+        let wTransform = getComputedStyle(musicImgWrapper).transform
+        musicImgWrapper.style.transform = wTransform === 'none' ? iTransform : iTransform.concat(' ', wTransform)
       }
     },
     components: {
