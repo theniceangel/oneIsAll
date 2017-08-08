@@ -31,7 +31,14 @@ function _formatDuration (duration) {
     return `${num}月前`
   }
 }
-
+// 寻找数组中元素的下标
+function findIndexInArray (arr, target) {
+  let index = arr.findIndex((item) => {
+    return item === target
+  })
+  return index
+}
 export {
-  countTime
+  countTime,
+  findIndexInArray
 }
