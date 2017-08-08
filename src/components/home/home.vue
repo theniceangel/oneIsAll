@@ -1,4 +1,5 @@
 <template>
+  <transition name="slide-left">
     <scroll
       :data="list"
       class="container"
@@ -16,12 +17,14 @@
         </div>
       </div>
     </scroll>
+  </transition>
 </template>
 <script>
-  import {mapGetters, mapActions, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   import Weather from 'base/weather/weather'
   import OneList from 'base/one-list/one-list'
   import Scroll from 'base/scroll/scroll'
+  import {GetYesterdayDate} from 'common/js/util'
   export default {
     data () {
       return {
@@ -33,38 +36,42 @@
       }
     },
     created () {
-      this.getIdList()
+      // 如果直接在地址栏输入不合法的日期，直接重定向回当天的时间
+      if (!this._regDate(this.$route.params.date)) {
+        this.$router.push({
+          path: '/'
+        })
+      }
+      let currentDate = this.$route.params.date || this.currentDate
+      this.setCurrentDate(currentDate)
+      this.initCurrentDayList()
     },
     methods: {
-      ...mapActions([
-        'initHome'
-      ]),
       ...mapMutations({
-        'setCurrentDay': 'SET_CURRENT_DAY'
+        'setCurrentDate': 'SET_CURRENT_DATE'
       }),
-      getIdList () {
-        let url = '/api/onelist/idlist'
-        this.$axios.get(url).then((res) => {
-          let idList = res.data.data
-          // 获取最近10天的id数组
-          this.initHome({idList})
-        }).then(() => {
+      initCurrentDayList () {
           // 获取当天的数据
-          let url = `/api/onelist/${this.currentId}/上海市`
-          this.$axios.get(url).then((res) => {
-            let data = res.data.data
-            this.curDate = data.weather.date
-            this.weather = data.weather.climate
-            this.city = data.weather.city_name
-            this.list = data.content_list
-          })
+        let url = `/api/onelist/${this.currentDate}/上海市`
+        this.$axios.get(url).then((res) => {
+          let data = res.data.data
+          this.curDate = data.weather.date
+          this.weather = data.weather.climate
+          this.city = data.weather.city_name
+          this.list = data.content_list
         })
       },
+      _regDate (string) {
+        // 判断是不是yyyy-mm-dd或者yyyy-m-dd,yyyy-mm-d,yyyy-m-d等格式的日期
+        let reg = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/g
+        return reg.test(string)
+      },
       routerToYesterday () {
-        let index = Math.min((this.currentDay + 1), this.idList.length)
-        this.setCurrentDay(index)
+        let currentDate = this.$route.params.date
+        let yesterday = GetYesterdayDate(currentDate, 1)
+        this.setCurrentDate(yesterday)
         this.$router.push({
-          path: `/homedetail/${this.currentId}`
+          path: `/home/${yesterday}`
         })
       },
       scroll (pos) {
@@ -74,8 +81,7 @@
     computed: {
       ...mapGetters([
         'currentId',
-        'currentDay',
-        'idList',
+        'currentDate',
         'playingState'
       ])
     },
@@ -101,4 +107,8 @@
       width 100%
       text-align center
       background-color $background
+  .slide-left-enter-active
+    transition: all .5s
+  .slide-left-enter
+    transform translate3d(-100%, 0, 0)
 </style>

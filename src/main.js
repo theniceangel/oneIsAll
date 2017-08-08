@@ -9,7 +9,7 @@ import store from './store'
 import global from 'common/js/plugins/global'
 import VueLazyload from 'vue-lazyload'
 /* eslint-disable no-unused-vars */
-// import console from 'vconsole'
+import console from 'vconsole'
 import 'babel-polyfill'
 // fastclick.attach(document.body)
 Vue.config.productionTip = false

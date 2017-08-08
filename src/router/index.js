@@ -1,7 +1,7 @@
 import Vue from 'vue'
+import {getCurrentDate} from 'common/js/util'
 import Router from 'vue-router'
 import Home from 'components/home/Home'
-import HomeDetail from 'components/home/home-detail'
 import Read from 'components/read/read'
 import Music from 'components/music/music'
 import Movie from 'components/movie/movie'
@@ -11,17 +11,16 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: `/home/${getCurrentDate()}`
     },
     {
       path: '/home',
-      name: 'Home',
-      component: Home
+      redirect: `/home/${getCurrentDate()}`
     },
     {
-      path: '/homedetail/:id',
-      name: 'Homedetail',
-      component: HomeDetail
+      path: '/home/:date',
+      name: 'Home',
+      component: Home
     },
     {
       path: '/read',

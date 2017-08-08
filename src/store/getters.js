@@ -3,11 +3,8 @@ export default {
   currentPage (state) {
     return state.currentPage
   },
-  idList (state) {
-    return state.idList
-  },
-  currentDay (state) {
-    return state.currentDay
+  currentDate (state) {
+    return state.currentDate
   },
   currentId (state) {
     return state.idList[state.currentDay]

@@ -6,7 +6,7 @@
           <div class="song-name">{{currentSong.name}}</div>
           <!-- 进度条-->
           <div class="progress-bar-wrapper">
-            <!-- 音乐总的音轨长-->
+            <!-- 音乐总音轨长-->
             <div @click.stop="forward" class="track-wrapper">
               <div ref="totalTrack"  class="grey-line"></div>
               <!-- 音乐当前播放的音轨长-->
