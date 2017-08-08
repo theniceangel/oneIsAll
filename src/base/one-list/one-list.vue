@@ -6,7 +6,7 @@
         <template v-if="item.category === '0'">
           <div class="wrapper">
             <div class="cover-title">{{item.volume}}</div>
-            <img v-lazy="item.img_url" alt="">
+            <img v-lazy="item.img_url"  alt="">
           </div>
           <div class="content">
             <p class="title">{{item.title}} | {{item.pic_info}}</p>

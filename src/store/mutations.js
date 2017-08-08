@@ -1,4 +1,5 @@
 import * as types from './mutations-types'
+import {setStoreList} from 'common/js/cache'
 export default {
   [types.SET_CURRENT_PAGE] (state, sequence) {
     state.currentPage = sequence
@@ -20,5 +21,8 @@ export default {
   },
   [types.SET_PLAYING_MODE] (state) {
     state.playingMode = state.playingMode === 0 ? 1 : 0
+  },
+  [types.SET_STORE_LIST] (state, id) {
+    state.storeList = setStoreList(id)
   }
 }

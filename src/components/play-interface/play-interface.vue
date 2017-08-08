@@ -29,7 +29,7 @@
             <span class="mode" @click.stop="setPlayingMode"><i :class="modeCls"></i></span>
             <span class="origin"><img  width="14" src="~common/images/xiami-logo.png" alt="">来自虾米音乐</span>
             <span class="add-and-turn">
-              <i class="icon-plus-square"></i>
+              <i class="icon-plus-square" :class="storeCls" @click.stop="store"></i>
               <i class="icon-share"></i>
             </span>
           </div>
@@ -40,6 +40,7 @@
 </template>
 <script>
   import {mapGetters, mapMutations} from 'vuex'
+  import {findIndexInArray} from 'common/js/util'
   export default {
     props: {
       showInterface: {
@@ -63,7 +64,8 @@
         'currentSong',
         'playingState',
         'playingMode',
-        'playList'
+        'playList',
+        'storeList'
       ]),
       cls () {
         let cls = this.playingState ? 'icon-stop' : 'icon-playfill'
@@ -88,12 +90,20 @@
           flag = true
         }
         return flag
+      },
+      storeCls () {
+        let index = findIndexInArray(this.storeList, this.currentSong.id)
+        if (index > -1) {
+          return 'active'
+        }
+        return ''
       }
     },
     methods: {
       ...mapMutations({
         setPlayingMode: 'SET_PLAYING_MODE',
-        setPlayingState: 'SET_PLAYING_STATE'
+        setPlayingState: 'SET_PLAYING_STATE',
+        setStoreList: 'SET_STORE_LIST'
       }),
       hide () {
         this.$emit('hideInterface')
@@ -139,15 +149,15 @@
         let totalTrack = this.$refs.totalTrack
         let touch = e.touches[0]
         let deltaX = touch.pageX - this.touch.startX
-        console.log('偏移量' + deltaX)
-        console.log('当前音轨的长度' + this.touch.offsetWidth)
         this.touch.percent = Math.max(0, Math.min((this.touch.offsetWidth + deltaX), totalTrack.offsetWidth)) / totalTrack.offsetWidth
-        console.log('percent' + this.touch.percent)
         this.$emit('percentChange', this.touch.percent)
       },
       progressEnd (e) {
         this.touch.init = false
         this.$emit('percentChange', this.touch.percent)
+      },
+      store () {
+        this.setStoreList(this.currentSong.id)
       }
     },
     watch: {
@@ -246,6 +256,8 @@
             margin 1px 4px 0 0
         .icon-plus-square
           margin-right 15px
+          &.active
+            color #f47474
         i
           font-size 24px
   .slider-down-enter-active, .slider-down-leave-active {
