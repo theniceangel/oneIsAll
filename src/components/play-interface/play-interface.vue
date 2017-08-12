@@ -158,6 +158,17 @@
       },
       store () {
         this.setStoreList(this.currentSong.id)
+        if (this.storeCls.includes('active')) {
+          this.$toast({
+            content: '已收藏<br/>可在个人中心中查找',
+            time: 1500
+          })
+        } else {
+          this.$toast({
+            content: '已取消收藏',
+            time: 1500
+          })
+        }
       }
     },
     watch: {
