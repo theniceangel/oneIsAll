@@ -1,0 +1,36 @@
+{
+  // Applications part
+  "apps" : [{
+    "name"      : "one-vue",
+    "script"    : "prod.server.js",
+    "env": {
+      "COMMON_VARIABLE": "true"
+    },
+    // Environment variables injected when starting with --env production
+    // http://pm2.keymetrics.io/docs/usage/application-declaration/#switching-to-different-environments
+    "env_production" : {
+      "NODE_ENV": "production"
+    }
+  }],
+  // Deployment part
+  // Here you describe each environment
+  "deploy" : {
+    "production" : {
+      "user" : "root",
+      // Multi host is possible, just by passing IPs/hostname as an array
+      "host" : ["47.94.0.206"],
+      // Branch
+      "ref"  : "origin/master",
+      // Git repository to clone
+      "repo" : "git@github.com:theniceangel/oneIsAll.git",
+      // Path of the application on target servers
+      "path" : "/home/www/deploy-projects",
+      // Commands to be executed on the server after the repo has been cloned
+      "post-deploy" : "cnpm install && pm2 startOrRestart ecosystem.json --env production",
+      // Environment variables that must be injected in all applications on this env
+      "env"  : {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
