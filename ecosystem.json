@@ -26,7 +26,7 @@
       // Path of the application on target servers
       "path" : "/home/www/deploy-projects",
       // Commands to be executed on the server after the repo has been cloned
-      "post-deploy" : "cnpm install && pm2 startOrRestart ecosystem.json --env production",
+      "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production",
       // Environment variables that must be injected in all applications on this env
       "env"  : {
         "NODE_ENV": "production"
