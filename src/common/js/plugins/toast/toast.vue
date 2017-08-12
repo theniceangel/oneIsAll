@@ -1,37 +1,21 @@
 <template>
   <transition name="enlarge">
-    <div class="container" v-show="isShow" v-html="content">
+    <div class="container" v-show="show" v-html="content">
     </div>
   </transition>
 </template>
-<script>
-  export default {
-    mounted () {
-      this.isShow = true
-      setTimeout(() => {
-        this.isShow = false
-      }, this.time)
-    },
-    data () {
-      return {
-        isShow: false,
-        content: '',
-        time: 300
-      }
-    }
-  }
-</script>
 <style scoped>
   .container {
-    padding: 5px 10px;
+    padding: 10px 10px;
     border-radius: 3px;
     background-color: rgba(0, 0, 0, .7);
     color:#fff;
     position: absolute;
     top:50%;
+    text-align: center;
     left:50%;
     transform: translate(-50%);
-    font-size: 12px;
+    font-size: 14px;
     z-index: 99999;
   }
   .enlarge-enter-active, .enlarge-leave-active {
