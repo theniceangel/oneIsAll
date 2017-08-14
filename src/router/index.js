@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import {getCurrentDate} from 'common/js/util'
 import Router from 'vue-router'
-import Home from 'components/home/home'
-import Read from 'components/read/read'
-import Music from 'components/music/music'
-import Movie from 'components/movie/movie'
+const Home = () => import('components/home/home')
+const Read = () => import('components/read/read')
+const Music = () => import('components/music/music')
+const Movie = () => import('components/movie/movie')
 Vue.use(Router)
 
 export default new Router({
