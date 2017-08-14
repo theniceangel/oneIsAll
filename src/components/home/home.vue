@@ -69,7 +69,7 @@
       routerToYesterday () {
         let currentDate = this.$route.params.date
         // let yesterday = GetYesterdayDate(currentDate, 1)
-        this.setCurrentDate(yesterday)
+        this.setCurrentDate(currentDate)
         this.$router.push({
           path: `/home/${currentDate}`
         })
