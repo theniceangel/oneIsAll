@@ -24,7 +24,7 @@
   import Weather from 'base/weather/weather'
   import OneList from 'base/one-list/one-list'
   import Scroll from 'base/scroll/scroll'
-  import {GetYesterdayDate} from 'common/js/util'
+  // import {GetYesterdayDate} from 'common/js/util'
   export default {
     data () {
       return {
@@ -68,10 +68,10 @@
       },
       routerToYesterday () {
         let currentDate = this.$route.params.date
-        let yesterday = GetYesterdayDate(currentDate, 1)
+        // let yesterday = GetYesterdayDate(currentDate, 1)
         this.setCurrentDate(yesterday)
         this.$router.push({
-          path: `/home/${yesterday}`
+          path: `/home/${currentDate}`
         })
       },
       scroll (pos) {
