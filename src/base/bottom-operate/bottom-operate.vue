@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
- // import {countTime} from 'common/js/util.js'
+  import {countTime} from 'common/js/util.js'
   export default {
     props: {
       favoriteCounts: {
