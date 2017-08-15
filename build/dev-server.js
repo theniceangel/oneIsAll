@@ -31,6 +31,7 @@ routers.get('/onelist/:date/:cityName', function (req, res) {
   var url = 'http://v3.wufazhuce.com:8000/api/channel/one/' + req.params.date + '/' + encodeURIComponent(req.params.cityName)+'?version=v4.3.0'
   axios.get(url).then((response) => {
     res.json(response.data)
+    console.log(response.data)
   }).catch((e) => {
     console.log(e)
   })

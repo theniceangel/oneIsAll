@@ -80,7 +80,6 @@
     },
     computed: {
       ...mapGetters([
-        'currentId',
         'currentDate',
         'playingState'
       ])
