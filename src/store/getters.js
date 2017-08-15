@@ -6,9 +6,6 @@ export default {
   currentDate (state) {
     return state.currentDate
   },
-  currentId (state) {
-    return state.idList[state.currentDay]
-  },
   currentSong (state) {
     return state.playList[state.currentPlayIndex] || {}
   },
