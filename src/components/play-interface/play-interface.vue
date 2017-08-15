@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
-    <div @click="hide" class="wrapper" v-show="showInterface">
-      <transition name="slider-down">
+    <div @click.stop="hide" class="wrapper" v-show="showInterface">
+      <transition name="slider  -down">
         <div class="sliderdown"  v-show="showInterface" @click.stop>
           <div class="song-name">{{currentSong.name}}</div>
           <!-- 进度条-->

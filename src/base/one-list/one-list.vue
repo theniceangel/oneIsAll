@@ -346,7 +346,6 @@
           margin 0 auto
           width 60%
           padding-bottom 60%
-          overflow hidden
           img
             position absolute
             width 100%
