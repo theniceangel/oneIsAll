@@ -24,7 +24,7 @@
   import Weather from 'base/weather/weather'
   import OneList from 'base/one-list/one-list'
   import Scroll from 'base/scroll/scroll'
-   import {GetYesterdayDate} from 'common/js/util'
+  import {GetYesterdayDate} from 'common/js/util'
   export default {
     data () {
       return {
