@@ -36,7 +36,7 @@
       }
     },
     created () {
-      console.log(1)
+      alert(1)
       // 如果直接在地址栏输入不合法的日期，直接重定向回当天的时间
       if (!this._regDate(this.$route.params.date)) {
         this.$router.push({
