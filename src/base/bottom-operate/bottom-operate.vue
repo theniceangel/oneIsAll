@@ -39,7 +39,7 @@
           return this.volume
         }
         // 否则返回发布时间与当前时间的差值
-        return this.postDate
+        return countTime(this.postDate)
       },
       getIconByCategory () {
         if (this.category === '0') { // 说明是首页海报,就是一个pencil的图标

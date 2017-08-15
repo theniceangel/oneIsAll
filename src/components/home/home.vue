@@ -24,7 +24,7 @@
   import Weather from 'base/weather/weather'
   import OneList from 'base/one-list/one-list'
   import Scroll from 'base/scroll/scroll'
-  // import {GetYesterdayDate} from 'common/js/util'
+   import {GetYesterdayDate} from 'common/js/util'
   export default {
     data () {
       return {
@@ -36,7 +36,6 @@
       }
     },
     created () {
-      alert(1)
       // 如果直接在地址栏输入不合法的日期，直接重定向回当天的时间
       if (!this._regDate(this.$route.params.date)) {
         this.$router.push({
@@ -69,10 +68,10 @@
       },
       routerToYesterday () {
         let currentDate = this.$route.params.date
-        // let yesterday = GetYesterdayDate(currentDate, 1)
-        this.setCurrentDate(currentDate)
+        let yesterday = GetYesterdayDate(currentDate, 1)
+        this.setCurrentDate(yesterday)
         this.$router.push({
-          path: `/home/${currentDate}`
+          path: `/home/${yesterday}`
         })
       },
       scroll (pos) {
