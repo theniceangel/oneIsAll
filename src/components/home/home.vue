@@ -58,7 +58,7 @@
           this.curDate = data.weather.date
           this.weather = data.weather.climate
           this.city = data.weather.city_name
-          this.list = data.content_list
+          this.list = this._normalizeList(data.content_list)
         })
       },
       _normalizeList (list) {
