@@ -61,6 +61,19 @@
           this.list = data.content_list
         })
       },
+      _normalizeList (list) {
+        list.forEach((item, index) => {
+          if (item.category === '4' && item.audio_url.includes('http')) {
+            // 去除非虾米音乐的音乐
+            list.splice(index, 1)
+          }
+          if (item.category === '6') {
+            // 去除广告
+            list.splice(index, 1)
+          }
+        })
+        return list
+      },
       _regDate (string) {
         // 判断是不是yyyy-mm-dd或者yyyy-m-dd,yyyy-mm-d,yyyy-m-d等格式的日期
         let reg = /^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/g
