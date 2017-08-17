@@ -6,6 +6,8 @@ import storage from 'good-storage'
 import {initToastInstance} from './toast'
 import axios from 'axios'
 const ERROR_LIST = '__ERROR_LIST__'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.headers.get['Content-Type'] = 'application/json'
 const errorHandler = (message, source, lineno, colno, error) => {
   let errorList = storage.get(ERROR_LIST, []) // 如果不存在对应的key，则会初始化一个空数组
   let errorMessage = `
