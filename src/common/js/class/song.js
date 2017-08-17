@@ -25,6 +25,7 @@ export default class Song {
       // 所以这里是用原生的ajax，并且把async设置为false,即同步请求
       let xhr = new XMLHttpRequest()
       xhr.open('get', url, false)
+      xhr.setRequestHeader('content-type', 'application/json')
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200 || xhr.status === 304) {
           let data = JSON.parse(xhr.responseText)
