@@ -72,7 +72,6 @@
       playingState (newPlayingState) {
         const audio = this.$refs.audio
         setTimeout(() => {
-          console.log(audio.src)
           newPlayingState ? audio.play() : audio.pause()
         }, 17)
       },

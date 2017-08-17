@@ -57,7 +57,6 @@ function GetYesterdayDate (currentDay, subtractionDayCount) {
   let year = temp.getFullYear()
   let month = padString((temp.getMonth() + 1).toString(), 2, 0)
   var day = padString(temp.getDate().toString(), 2, 0)
-  console.log(`${year}-${month}-${day}`)
   return `${year}-${month}-${day}`
 }
 export {

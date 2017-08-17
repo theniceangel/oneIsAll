@@ -5,7 +5,7 @@
       class="container"
       :listenScroll="listenScroll"
       @scroll="scroll">
-      <!-- 首页顶部->日期与天气模块-->
+      <!-- 首页顶部-->
       <div class="wrapper">
         <div>
           <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
