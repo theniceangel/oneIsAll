@@ -22,7 +22,7 @@ export default class Song {
       }) */
       // 用上面的异步请求会导致在ios无法播放
       // 因为ios规定，audio.play（）必须是用户手动触发，而且逻辑不能写在异步请求里面
-      // 所以这里是用原生的ajax，并且把async设置为false
+      // 所以这里是用原生的ajax，并且把async设置为false,即同步请求
       let xhr = new XMLHttpRequest()
       xhr.open('get', url, false)
       xhr.onreadystatechange = () => {
