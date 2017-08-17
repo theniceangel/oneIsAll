@@ -4,7 +4,9 @@ var app = express()
 var fastXmlParser = require('fast-xml-parser')
 var utils = require('./build/utils')
 var history = require('connect-history-api-fallback')
-app.use(history())
+app.use(history({
+  htmlAcceptHeaders: ['text/html']
+}))
 
 var routers = express.Router()
 
