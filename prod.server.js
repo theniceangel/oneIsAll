@@ -3,6 +3,12 @@ var axios = require('axios')
 var app = express()
 var fastXmlParser = require('fast-xml-parser')
 var utils = require('./build/utils')
+var history = require('connect-history-api-fallback')
+app.use(history({
+  rewrites: [
+    {from: '/', to: '/index.html'}
+  ]
+}))
 
 var routers = express.Router()
 
