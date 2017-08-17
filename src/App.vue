@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @click="initAudioPlay">
+  <div id="app">
     <o-header></o-header>
     <keep-alive>
       <router-view :key="$route.path"></router-view>
@@ -51,12 +51,6 @@
       updatePercent (percent) {
         const audio = this.$refs.audio
         audio.currentTime = this.currentSong.duration * percent
-      },
-      initAudioPlay () {
-        const audio = this.$refs.audio
-        this.$nextTick(() => {
-          audio.play()
-        })
       }
     },
     computed: {
