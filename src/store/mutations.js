@@ -1,9 +1,6 @@
 import * as types from './mutations-types'
 import {setStoreList} from 'common/js/cache'
 export default {
-  [types.SET_CURRENT_PAGE] (state, sequence) {
-    state.currentPage = sequence
-  },
   [types.SET_CURRENT_DATE] (state, date) {
     state.currentDate = date
   },

@@ -1,8 +1,5 @@
 // getters参照state的注释
 export default {
-  currentPage (state) {
-    return state.currentPage
-  },
   currentDate (state) {
     return state.currentDate
   },

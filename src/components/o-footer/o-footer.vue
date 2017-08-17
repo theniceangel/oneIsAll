@@ -1,16 +1,14 @@
 <template>
   <ul class="border-1px">
-    <router-link tag="li" :class="{'router-link-active': (index === currentPage)}"  v-for="(item, index) in liList" :to="item.routerPath" :key="item.index" >
+    <router-link tag="li"  v-for="(item, index) in liList" :to="item.routerPath" :key="item.index" >
       <i @click='selectItem(index)' :class="[item.className]"></i>
     </router-link>
   </ul>
 </template>
 <script>
-  import {mapMutations, mapGetters} from 'vuex'
   export default {
     data () {
       return {
-        currentIndex: 0,
         liList: [{
           className: 'icon-circle',
           routerPath: '/home'
@@ -24,19 +22,6 @@
           className: 'icon-video',
           routerPath: '/movie'
         }]
-      }
-    },
-    computed: {
-      ...mapGetters([
-        'currentPage'
-      ])
-    },
-    methods: {
-      ...mapMutations({
-        'setCurrentPage': 'SET_CURRENT_PAGE'
-      }),
-      selectItem (index) {
-        this.setCurrentPage(index)
       }
     }
   }

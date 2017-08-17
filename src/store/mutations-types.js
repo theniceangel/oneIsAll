@@ -1,4 +1,3 @@
-export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 export const SET_CURRENT_DAY = 'SET_CURRENT_DAY'
 export const SET_CURRENT_DATE = 'SET_CURRENT_DATE'
 export const SET_PLAY_LIST = 'SET_PLAY_LIST'
