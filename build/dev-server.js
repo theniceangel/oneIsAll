@@ -2,6 +2,7 @@ require('./check-versions')()
 var axios = require('axios')
 var config = require('../config')
 var fastXmlParser = require('fast-xml-parser');
+var history = require('connect-history-api-fallback');
 var utils = require('./utils')
 
 if (!process.env.NODE_ENV) {
@@ -24,6 +25,11 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+app.use({
+  rewrites: [
+    { from: '/', to: '/index.html'}
+  ]
+})
 var routers = express.Router()
 // 根据日期获取某一天的Home组件列表 /api/onelist/2017-08-09/
 routers.get('/onelist/:date/:cityName', function (req, res) {
