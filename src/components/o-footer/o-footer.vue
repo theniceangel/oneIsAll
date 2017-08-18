@@ -1,7 +1,7 @@
 <template>
   <ul class="border-1px">
     <router-link tag="li"  v-for="(item, index) in liList" :to="item.routerPath" :key="item.index" >
-      <i @click='selectItem(index)' :class="[item.className]"></i>
+      <i :class="[item.className]"></i>
     </router-link>
   </ul>
 </template>
