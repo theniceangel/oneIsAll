@@ -22,9 +22,6 @@
   import {mapGetters} from 'vuex'
   export default {
     name: 'app',
-    beforeCreate () {
-      debugger
-    },
     methods: {
       ready () {
         // 播放器准备开始播放
