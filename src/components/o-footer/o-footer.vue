@@ -1,6 +1,6 @@
 <template>
   <ul class="border-1px">
-    <router-link tag="li"  v-for="(item, index) in liList" :to="item.routerPath" :key="item.index" >
+    <router-link tag="li" v-for="(item, index) in liList" :to="item.routerPath" :key="item.index">
       <i :class="[item.className]"></i>
     </router-link>
   </ul>
@@ -35,7 +35,7 @@
     height 50px
     bottom 0
     left 0
-    position fixed!important
+    position fixed !important
     border-1px-top($color-desc)
     background-color white
     align-items: center
@@ -44,7 +44,7 @@
       flex 1
       i
         font-size 26px
-        align-content  center
+        align-content center
         color $color-desc
         display inline-block
       &.router-link-active

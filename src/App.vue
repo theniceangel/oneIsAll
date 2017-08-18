@@ -55,7 +55,6 @@
     },
     computed: {
       ...mapGetters([
-        'currentPage',
         'currentSong',
         'playingState',
         'playingMode',
