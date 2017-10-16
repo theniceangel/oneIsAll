@@ -1,7 +1,7 @@
 <template>
     <div class="container border-1px">
       <i class="icon-account"></i>
-      <div class="title">一个</div>
+      <div class="title">两个</div>
       <i class="icon-search"></i>
     </div>
 </template>
