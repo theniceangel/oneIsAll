@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import {getCurrentDate} from 'common/js/util'
 import Router from 'vue-router'
 const Home = () => import('components/home/home')
 const Read = () => import('components/read/read')
@@ -12,11 +11,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: `/home/${getCurrentDate()}`
+      redirect: `/home/0`
     },
     {
       path: '/home',
-      redirect: `/home/${getCurrentDate()}`
+      redirect: `/home/0`
     },
     {
       path: '/home/:date',
