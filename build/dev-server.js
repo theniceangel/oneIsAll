@@ -30,8 +30,8 @@ routers.get('/onelist/:date/:cityName', function (req, res) {
   // 通过fiddler抓包后发现，必须要待version参数，要不然返回的数据比实际数据少了一条
   var url = 'http://v3.wufazhuce.com:8000/api/channel/one/' + req.params.date + '/' + encodeURIComponent(req.params.cityName)+'?version=v4.3.0'
   axios.get(url).then((response) => {
+    console.log(url)
     res.json(response.data)
-    console.log(response.data)
   }).catch((e) => {
     console.log(e)
   })

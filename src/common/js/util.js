@@ -59,10 +59,39 @@ function GetYesterdayDate (currentDay, subtractionDayCount) {
   var day = padString(temp.getDate().toString(), 2, 0)
   return `${year}-${month}-${day}`
 }
+/**
+ * raf polyfill
+ */
+const DEFAULT_INTERVAL = 1000 / 60
+let requestAnimationFrame = (function () {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    // 所有都不支持，用setTimeout兼容
+    function (callback) {
+      return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL))  // make interval as precise as possible.
+    }
+})()
+
+/**
+ * cancel raf polyfill
+ */
+let cancelAnimationFrame = (function () {
+  return window.cancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    window.mozCancelAnimationFrame ||
+    window.oCancelAnimationFrame ||
+    function (id) {
+      window.clearTimeout(id)
+    }
+})()
 export {
   countTime,
   findIndexInArray,
   getCurrentDate,
   padString,
-  GetYesterdayDate
+  GetYesterdayDate,
+  requestAnimationFrame,
+  cancelAnimationFrame
 }

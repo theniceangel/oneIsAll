@@ -123,6 +123,5 @@ exports.genRealPathOfXiami = function (location) {
     }
   }
   httpUrl = decodeURIComponent(urlArr.join('')).replace(/\^/ig, 0)
-  console.log(httpUrl)
   return httpUrl
 }
