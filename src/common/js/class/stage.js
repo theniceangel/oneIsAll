@@ -5,7 +5,7 @@ export default class Stage {
     this.spriteQuene = []
     this.parent = parent
   }
-  addSprite (count) {
+  addSprite (count = 50) {
     for (let i = 0; i < count; i++) {
       this.spriteQuene.push(createSprite({
         radio: 3,
