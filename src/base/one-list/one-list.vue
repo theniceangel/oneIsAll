@@ -4,8 +4,7 @@
       <li class="list-item" :class="{'radio': item.category === '8', 'poster': item.category === '0'}" v-for="(item, index) in list">
         <!-- 如果是首页海报-->
         <template v-if="item.category === '0'">
-          <div class="wrapper">
-            <div class="cover-title">{{item.volume}}</div>
+          <div class="wrapper" @click="clickedPost">
             <img v-lazy="item.img_url"  alt="">
           </div>
           <div class="content">
@@ -15,6 +14,43 @@
           </div>
           <div class="padding">
             <bottom-operate :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+          </div>
+          <!-- 点击海报之后的弹窗-->
+            <transition name="opacity">
+              <div v-show="showPost" class="post-container" @click.stop="hidePost">
+                <transition
+                  @before-enter="postBeforeEnter"
+                  @enter="postEnter"
+                  @leave="postLeave"
+                  v-bind:css="false"
+                >
+                  <div class="img-container" v-show="showImg">
+                    <div class="cover-title">{{item.volume}}</div>
+                    <img :src="item.img_url" alt="" @click.stop>
+                    <p class="title">{{item.title}} | {{item.pic_info}}</p>
+                  </div>
+                </transition>
+              </div>
+            </transition>
+        </template>
+        <!-- 如果是清单列表-->
+        <template v-if="index === 1">
+          <div class="menu-header" @click="expandOrCollapse">
+            <p><span>一个 VOL.{{menu.vol}}</span><i ref="iconArrow"></i></p>
+            <transition
+              name="autoHeight"
+              v-for="(list, listIndex) in menu.list"
+              :key="list.content_id"
+            >
+                <div v-show="showMenu"  class="menu-item" >
+                  <i></i>
+                  <div class="menu-wrapper">
+                    <div class="category">{{getTitle(list.content_type)}}</div>
+                    <div class="title">{{list.title || list.tag.title}}</div>
+                  </div>
+                </div>
+            </transition>
+            <div class="line-grey"></div>
           </div>
         </template>
         <!-- 如果是首页的一个故事，连载，问答-->
@@ -115,6 +151,7 @@
   import {mapGetters, mapMutations, mapActions} from 'vuex'
   import BottomOperate from 'base/bottom-operate/bottom-operate'
   import DashlineSvg from 'base/dashline-svg/dashline-svg'
+  import Animations from 'create-keyframe-animation'
   import Loading from 'base/loading/loading'
   import {createSong} from 'common/js/class/song'
   export default {
@@ -122,10 +159,17 @@
       list: {
         type: Array,
         default: []
+      },
+      menu: {
+        type: Object,
+        default: {}
       }
     },
     data () {
       return {
+        showPost: false, // 是否显示海报
+        showImg: false,
+        showMenu: false
       }
     },
     computed: {
@@ -145,7 +189,7 @@
       getTitle (category) {
         // 根据category,制定的类型映射表
         let titleMap = {
-          '1': '阅读',
+          '1': 'ONE STORY',
           '2': '连载',
           '3': '问答',
           '4': '音乐',
@@ -227,6 +271,79 @@
         let iTransform = getComputedStyle(img).transform
         let wTransform = getComputedStyle(musicImgWrapper).transform
         musicImgWrapper.style.transform = wTransform === 'none' ? iTransform : iTransform.concat(' ', wTransform)
+      },
+      // 点击展开menu
+      expandOrCollapse () {
+        let clsName = this.$refs.iconArrow[0].className
+        if (clsName.indexOf('rotated') > -1) {
+          this.$refs.iconArrow[0].className = clsName.replace('rotated', '')
+          this.showMenu = false
+        } else {
+          this.$refs.iconArrow[0].className = 'rotated'
+          this.showMenu = true
+        }
+      },
+      // 点击了海报
+      clickedPost () {
+        this.showPost = true
+        this.showImg = true
+      },
+      // 隐藏海报
+      hidePost () {
+        this.showImg = false
+      },
+      /**
+       *  点击大海报的事件
+       */
+      postBeforeEnter (el) {
+        // 注册动画
+        Animations.registerAnimation({
+          name: 'moveFadeInGrow',
+          // the actual array of animation changes
+          animation: [
+            {
+              opacity: 0,
+              scale: 1.15
+            }, {
+              opacity: 1,
+              scale: 1.0
+            }
+          ],
+          // optional presets for when actually running the animation
+          presets: {
+            duration: 200,
+            easing: 'linear'
+          }
+        })
+        Animations.registerAnimation({
+          name: 'moveFadeOutGrow',
+          // the actual array of animation changes
+          animation: [
+            {
+              opacity: 1,
+              scale: 1.0
+            }, {
+              opacity: 0,
+              scale: 0.95
+            }
+          ],
+          // optional presets for when actually running the animation
+          presets: {
+            duration: 200,
+            easing: 'linear'
+          }
+        })
+      },
+      postEnter (el, done) {
+        Animations.runAnimation(el, 'moveFadeInGrow', () => {
+          done && done()
+        })
+      },
+      postLeave (el, done) {
+        this.showPost = false
+        Animations.runAnimation(el, 'moveFadeOutGrow', () => {
+          done && done()
+        })
       }
     },
     components: {
@@ -246,7 +363,7 @@
   .list-item
     margin-top 10px
     background-color white
-    padding 0 24px 15px
+    padding 0 12px 15px
     &:first-child
       margin-top 0
     &.radio
@@ -257,13 +374,6 @@
       position relative
       width 100%
       padding-bottom 66.67%
-      .cover-title
-        position absolute
-        top 10px
-        left 10px
-        color white
-        font-size $font-size-medium-s
-        z-index 1
       img
         position absolute
         top 0
@@ -466,4 +576,84 @@
     .space10
       margin-top  10px
       padding 0 12px
+  .post-container
+    position absolute
+    width 100%
+    height 100%
+    left 0
+    top 0
+    z-index 88
+    background-color rgba(0, 0, 0, 0.9)
+    .img-container
+      position relative
+      .cover-title
+        position absolute
+        top 120px
+        left 3%
+        color #fff
+        z-index 999
+      .title
+        margin 16px 0 0 3%
+        color #fff
+        text-align left
+    img
+      width 94%
+      margin-top 150px
+  .menu-header
+    padding-top 15px
+    span
+      display inline-block
+      vertical-align middle
+    i
+      display inline-block
+      vertical-align middle
+      width 10px
+      height 20px
+      margin-left 5px
+      transform-origin center center
+      transition all .3s ease
+      background url('../../common/images/arrow_down.png') no-repeat right center
+      background-size 10px auto
+      &.rotated
+        transition all .3s ease
+        transform rotate(180deg)
+    .line-grey
+      width 120%
+      margin-left -12px
+      padding-top 15px
+      border-bottom 10px solid $background
+  .menu-item
+    display flex
+    align-content center
+    text-align left
+    margin-top 30px
+    i
+      display block
+      min-width 30px
+      background url("../../common/images/arrow_right.png") no-repeat left center
+      background-size 15px auto
+    .menu-wrapper
+      flex 1
+      flex-wrap wrap
+      align-content space-between
+      width 0
+      .title
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+        margin-top 10px
+  .opacity-enter-active, .opacity-leave-active {
+    transition: opacity .2s linear
+  }
+  .opacity-enter, .opacity-leave-to /* .opacity-leave-active in below version 2.1.8 */ {
+    opacity: 0
+  }
+  .autoHeight-enter-active, .autoHeight-leave-active {
+    transition: all .3s linear
+    height 68px
+  }
+  .autoHeight-enter, .autoHeight-leave-to /* .opacity-leave-active in below version 2.1.8 */ {
+    transition: all .3s linear
+    height: 0
+  }
 </style>

@@ -1,23 +1,25 @@
 <template>
-  <transition name="slide-left">
-    <scroll
-      :data="list"
-      class="container"
-      :listenScroll="listenScroll"
-      @scroll="scroll">
-      <!-- 首页顶部-->
-      <div class="wrapper">
-        <div>
-          <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
-          <one-list :list="list"></one-list>
-          <!-- 切换到昨天 -->
-          <div @click="routerToYesterday" class="prev-wrapper"  v-if="list.length">
-            <img src="~common/images/prev.png" width="30%" alt="">
+  <div class="box">
+    <transition name="slide-left">
+      <scroll
+        :data="list"
+        class="container"
+        :listenScroll="listenScroll"
+      >
+        <!-- 首页顶部-->
+        <div class="wrapper">
+          <div>
+            <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
+            <one-list :list="list" :menu="menu"></one-list>
+            <!-- 切换到昨天 -->
+            <div @click="routerToYesterday" class="prev-wrapper"  v-if="list.length">
+              <img src="~common/images/prev.png" width="30%" alt="">
+            </div>
           </div>
         </div>
-      </div>
-    </scroll>
-  </transition>
+      </scroll>
+    </transition>
+  </div>
 </template>
 <script>
   import {mapGetters, mapMutations} from 'vuex'
@@ -32,7 +34,8 @@
         weather: '',
         city: '',
         list: [],
-        listenScroll: true
+        listenScroll: true,
+        menu: {} // 清单列表
       }
     },
     created () {
@@ -58,6 +61,7 @@
           this.curDate = data.weather.date
           this.weather = data.weather.climate
           this.city = data.weather.city_name
+          this.menu = data.menu
           this.list = this._normalizeList(data.content_list)
         })
       },
@@ -86,9 +90,6 @@
         this.$router.push({
           path: `/home/${yesterday}`
         })
-      },
-      scroll (pos) {
-        this.$emit('scroll', pos)
       }
     },
     computed: {
