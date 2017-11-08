@@ -346,6 +346,11 @@
         })
       }
     },
+    watch: {
+      showMenu () {
+        this.$emit('showMenu')
+      }
+    },
     components: {
       BottomOperate,
       DashlineSvg,

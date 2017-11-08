@@ -5,12 +5,13 @@
         :data="list"
         class="container"
         :listenScroll="listenScroll"
+        ref="scroll"
       >
         <!-- 首页顶部-->
         <div class="wrapper">
           <div>
             <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
-            <one-list :list="list" :menu="menu"></one-list>
+            <one-list :list="list" :menu="menu" @showMenu="refreshBS"></one-list>
             <!-- 切换到昨天 -->
             <div @click="routerToYesterday" class="prev-wrapper"  v-if="list.length">
               <img src="~common/images/prev.png" width="30%" alt="">
@@ -90,6 +91,11 @@
         this.$router.push({
           path: `/home/${yesterday}`
         })
+      },
+      refreshBS () {
+        setTimeout(() => {
+          this.$refs.scroll.refresh()
+        }, 400)
       }
     },
     computed: {
