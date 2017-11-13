@@ -1,6 +1,5 @@
 <template>
     <div class="container border-1px">
-      <i class="icon-account"></i>
       <div class="title">一个</div>
       <i class="icon-search"></i>
     </div>
@@ -30,6 +29,7 @@
       font-size $font-size-medium
       display inline-block
       width 20px
+      line-height 40px;
     div
       flex 1
       color $color-content

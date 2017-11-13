@@ -6,5 +6,6 @@ export default {
   currentPlayIndex: 0, // 正在播放的歌曲的索引
   playingState: false, // 播放状态
   playingMode: 0, // 0为顺序播放，1为循环播放
-  storeList: getStoreList() // 用户收藏的歌单
+  storeList: getStoreList(), // 用户收藏的歌单
+  shareItem: [] // 当前分享
 }

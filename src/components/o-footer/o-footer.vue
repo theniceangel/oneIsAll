@@ -11,16 +11,13 @@
       return {
         liList: [{
           className: 'icon-circle',
-          routerPath: '/home'
+          routerPath: '/one'
         }, {
-          className: 'icon-book',
-          routerPath: '/read'
+          className: 'icon-grid',
+          routerPath: '/all'
         }, {
-          className: 'icon-music',
-          routerPath: '/music'
-        }, {
-          className: 'icon-video',
-          routerPath: '/movie'
+          className: 'icon-user',
+          routerPath: '/me'
         }]
       }
     }

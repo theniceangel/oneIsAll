@@ -1,16 +1,20 @@
 <template>
-  <div class="container">
-    <div class="left">
-      <i :class="getIconByCategory">{{displayTime}}</i>
-    </div>
-    <div class="right">
-      {{favoriteCounts}}
-      <i class="icon-favorites"></i>
-      <i class="icon-share"></i>
+  <div>
+    <div class="container">
+      <div class="left">
+        <i :class="getIconByCategory"></i>
+        {{displayTime}}
+      </div>
+      <div class="right">
+        <i class="icon-corner-up-right" @click.stop="showSharePopup"></i>
+        <i class="icon-bookmark" v-if="category == 0"></i>
+        <i class="icon-heart"><span>{{favoriteCounts}}</span></i>
+      </div>
     </div>
   </div>
 </template>
 <script>
+  import {mapMutations} from 'vuex'
   import {countTime} from 'common/js/util.js'
   export default {
     props: {
@@ -27,6 +31,10 @@
       },
       volume: {
         type: String
+      },
+      shareList: {
+        type: Object,
+        dafault: {}
       }
     },
     computed: {
@@ -43,10 +51,19 @@
       },
       getIconByCategory () {
         if (this.category === '0') { // 说明是首页海报,就是一个pencil的图标
-          return 'icon-pencil'
+          return 'icon-edit-2'
         } else {
           return ''
         }
+      }
+    },
+    methods: {
+      ...mapMutations({
+        setShareItem: 'SET_SHARE_ITEM'
+      }),
+      showSharePopup () {
+        // 弹出分享弹窗
+        this.setShareItem(this.shareList)
       }
     },
     data () {
@@ -61,9 +78,12 @@
     display: flex
     color $color-desc
     font-size $font-size-small
+    align-content center
     .left
       width 100px
       text-align left
+      display flex
+      align-items  center
       i
         line-height 22px
         font-size $font-size-medium-s
@@ -73,12 +93,27 @@
     .right
       text-align right
       flex 1
-      align-self center
       font-size $font-size-medium
-      line-height 16px
+      display flex
+      align-items  center
+      flex-direction row-reverse
       i
         font-size $font-size-large-s
         line-height 22px
-        &.icon-favorites
-          margin 0 20px 0 4px
+        &.icon-heart
+          margin 0 30px 0 4px
+          position relative
+          span
+            font-size 12px
+            position absolute
+            top -8px
+            right 0
+            transform translateX(100%)
+        &.active
+          color #e57b78
+        &.icon-corner-up-right
+          margin-left 5px
+        &.icon-bookmark
+          margin-left 5px
+
 </style>

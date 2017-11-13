@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import {getCurrentDate} from 'common/js/util'
 import Router from 'vue-router'
-const Home = () => import('components/home/home')
-const Read = () => import('components/read/read')
-const Music = () => import('components/music/music')
-const Movie = () => import('components/movie/movie')
+const One = () => import('components/one/One')
+const All = () => import('components/all/All')
+const Me = () => import('components/me/Me')
 Vue.use(Router)
 
 export default new Router({
@@ -12,31 +11,26 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: `/home/${getCurrentDate()}`
+      redirect: `/one/${getCurrentDate()}`
     },
     {
-      path: '/home',
-      redirect: `/home/${getCurrentDate()}`
+      path: '/one',
+      redirect: `/one/${getCurrentDate()}`
     },
     {
-      path: '/home/:date',
-      name: 'Home',
-      component: Home
+      path: '/one/:date',
+      name: 'One',
+      component: One
     },
     {
-      path: '/read',
-      name: 'Read',
-      component: Read
+      path: '/all',
+      name: 'All',
+      component: All
     },
     {
-      path: '/music',
-      name: 'Music',
-      component: Music
-    },
-    {
-      path: '/movie',
-      name: 'Movie',
-      component: Movie
+      path: '/me',
+      name: 'Me',
+      component: Me
     }
   ]
 })

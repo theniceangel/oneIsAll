@@ -17,5 +17,8 @@ export default {
   },
   storeList (state) {
     return state.storeList
+  },
+  shareItem (state) {
+    return state.shareItem
   }
 }

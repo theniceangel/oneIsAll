@@ -4,34 +4,29 @@
       <li class="list-item" :class="{'radio': item.category === '8', 'poster': item.category === '0'}" v-for="(item, index) in list">
         <!-- 如果是首页海报-->
         <template v-if="item.category === '0'">
-          <div class="wrapper" @click="clickedPost">
-            <img v-lazy="item.img_url"  alt="">
-          </div>
+            <img v-lazy="item.img_url" @click="clickedPost"  alt="" @load="fixWidth" ref="postImg">
           <div class="content">
             <p class="title">{{item.title}} | {{item.pic_info}}</p>
             <div class="forward">{{item.forward}}</div>
             <p class="words_info">{{item.words_info}}</p>
           </div>
           <div class="padding">
-            <bottom-operate :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+            <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count" ></bottom-operate>
           </div>
           <!-- 点击海报之后的弹窗-->
-            <transition name="opacity">
+          <transition
+            @before-enter="postBeforeEnter"
+            @enter="postEnter"
+            @leave="postLeave"
+          >
               <div v-show="showPost" class="post-container" @click.stop="hidePost">
-                <transition
-                  @before-enter="postBeforeEnter"
-                  @enter="postEnter"
-                  @leave="postLeave"
-                  v-bind:css="false"
-                >
-                  <div class="img-container" v-show="showImg">
+                  <div class="img-container">
                     <div class="cover-title">{{item.volume}}</div>
-                    <img :src="item.img_url" alt="" @click.stop>
+                    <img :src="item.img_url" alt="" @click.stop  ref="popUpImg">
                     <p class="title">{{item.title}} | {{item.pic_info}}</p>
                   </div>
-                </transition>
               </div>
-            </transition>
+          </transition>
         </template>
         <!-- 如果是清单列表-->
         <template v-if="index === 1">
@@ -69,7 +64,7 @@
             </div>
             <p class="article-forward">{{item.forward}}</p>
           </div>
-          <bottom-operate :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count"></bottom-operate>
         </template>
         <!-- 如果是首页的一个音乐 -->
         <template v-if="item.category === '4'">
@@ -95,7 +90,7 @@
             <p class="music-info">{{item.music_name}}·{{item.audio_author}}|{{item.audio_album}}</p>
             <p class="article-forward">{{item.forward}}</p>
           </div>
-          <bottom-operate :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count"></bottom-operate>
         </template>
         <!-- 如果是首页的一个影视 -->
         <template v-if="item.category === '5'">
@@ -109,7 +104,7 @@
             <p class="article-content-author">{{getAuthor(item.category, item.author)}}</p>
             <div class="image-wrapper">
               <div class="dashline-svg-top">
-                <!-- 这种虚线框只能通过svg去实现,只有通过svg才能控制虚线的间距-->
+                <!-- 这种虚线框通过svg去实现-->
                 <dashline-svg></dashline-svg>
               </div>
               <img class="video-image" v-lazy="dealLazyVideoImage(item.img_url)" alt="">
@@ -120,7 +115,7 @@
             <p class="article-forward">{{item.forward}}</p>
             <p class="subtitle">——《{{item.subtitle}}》</p>
           </div>
-          <bottom-operate :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count"></bottom-operate>
         </template>
         <!-- 如果是首页的深夜电台 -->
         <template v-if="item.category === '8'">
@@ -131,7 +126,7 @@
             <div class="bottom-info" >
               <div class="left" >
                 <div class="border-wrapper" v-if="item.author.user_name">
-                  <i class="icon-play"></i>
+                  <i class="icon-playback-play"></i>
                 </div>
               </div>
               <div class="right">
@@ -141,7 +136,7 @@
             </div>
           </div>
           <div class="space10">
-            <bottom-operate :volume='item.volume' :category="item.category" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+            <bottom-operate :volume='item.volume' :category="item.category" :shareList="item.share_list" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
           </div>
         </template>
       </li>
@@ -168,8 +163,7 @@
     data () {
       return {
         showPost: false, // 是否显示海报
-        showImg: false,
-        showMenu: false
+        showMenu: false // 是否展开海报下面的menu清单
       }
     },
     computed: {
@@ -216,7 +210,7 @@
       dealLazyReadImage (imgUrl) {
         return {
           src: imgUrl,
-          loading: require('../../common/images/one-read-onload.jpg')
+          loading: require('../../common/images/one-read-onload.png')
         }
       },
       dealLazyVideoImage (imgUrl) {
@@ -246,28 +240,20 @@
         if (this.currentSong.id === id && this.playingState) {
           return 'playing-mode'
         }
-        this.$nextTick(() => {
-          this.syncTransformWrapper('musicImgWrapper', 'musicImg', index)
-        })
+        this.syncTransformWrapper('musicImgWrapper', 'musicImg', index)
       },
       getIconPlayingCls (id) {
         if (this.currentSong.id === id && this.playingState) {
-          return 'icon-stop'
+          return 'icon-playback-pause'
         }
-        return 'icon-playfill'
+        return 'icon-playback-play'
       },
       syncTransformWrapper (wrapperRef, imgRef, index) {
         if (!this.$refs[wrapperRef]) return
         let musicImgWrapper
         let img
-        // 添加一个分支判断，用来判断home组件以及music组件下的音乐播放
-        if (this.$refs[wrapperRef].length === 1) {
-          musicImgWrapper = this.$refs[wrapperRef][0]
-          img = this.$refs[imgRef][0]
-        } else {
-          musicImgWrapper = this.$refs[wrapperRef][index]
-          img = this.$refs[imgRef][index]
-        }
+        musicImgWrapper = this.$refs[wrapperRef][0]
+        img = this.$refs[imgRef][0]
         let iTransform = getComputedStyle(img).transform
         let wTransform = getComputedStyle(musicImgWrapper).transform
         musicImgWrapper.style.transform = wTransform === 'none' ? iTransform : iTransform.concat(' ', wTransform)
@@ -283,14 +269,22 @@
           this.showMenu = true
         }
       },
+      fixWidth () {
+        // 加载完大图，重新刷新better-scroll，为了获得正确的高度
+        this.$emit('refreshBS')
+        let height = parseInt(this.$refs.postImg[0].naturalHeight)
+        let width = parseInt(this.$refs.postImg[0].naturalWidth)
+        if (height > width) {
+          this.$refs.popUpImg[0].style.width = '60%'
+        }
+      },
       // 点击了海报
       clickedPost () {
         this.showPost = true
-        this.showImg = true
       },
       // 隐藏海报
       hidePost () {
-        this.showImg = false
+        this.showPost = false
       },
       /**
        *  点击大海报的事件
@@ -303,7 +297,7 @@
           animation: [
             {
               opacity: 0,
-              scale: 1.15
+              scale: 1.05
             }, {
               opacity: 1,
               scale: 1.0
@@ -324,12 +318,12 @@
               scale: 1.0
             }, {
               opacity: 0,
-              scale: 0.95
+              scale: 1.15
             }
           ],
           // optional presets for when actually running the animation
           presets: {
-            duration: 200,
+            duration: 300,
             easing: 'linear'
           }
         })
@@ -349,6 +343,17 @@
     watch: {
       showMenu () {
         this.$emit('showMenu')
+      },
+      showPost (newVal) { // 监听是否显示全屏海报
+        if (newVal) {
+          this.$parent.$el.style.top = 0
+          this.$parent.$el.style.bottom = 0
+          this.$parent.$el.style.zIndex = 9999
+        } else {
+          this.$parent.$el.style.top = 40 + 'px'
+          this.$parent.$el.style.bottom = 50 + 'px'
+          this.$parent.$el.style.zIndex = 2
+        }
       }
     },
     components: {
@@ -375,16 +380,8 @@
       padding 0 0 15px
     &.poster
       padding 0 0 15px
-    .wrapper
-      position relative
-      width 100%
-      padding-bottom 66.67%
       img
-        position absolute
-        top 0
-        left 0
         width 100%
-        height 100%
     .content
       .title
         color $color-desc
@@ -431,7 +428,7 @@
         margin 20px 0
         width 100%
         position relative
-        padding-bottom  59.7%
+        padding-bottom  63.7%
         .dashline-svg-top
           position absolute
           top -15px
@@ -567,7 +564,7 @@
             line-height  30px
             i
               font-size $font-size-large
-              line-height: 32px
+              line-height: 30px
         .right
           display flex
           height 40px
@@ -593,7 +590,7 @@
       position relative
       .cover-title
         position absolute
-        top 120px
+        top 70px
         left 3%
         color #fff
         z-index 999
@@ -603,7 +600,7 @@
         text-align left
     img
       width 94%
-      margin-top 150px
+      margin-top 100px
   .menu-header
     padding-top 15px
     span
@@ -647,12 +644,6 @@
         text-overflow ellipsis
         white-space nowrap
         margin-top 10px
-  .opacity-enter-active, .opacity-leave-active {
-    transition: opacity .2s linear
-  }
-  .opacity-enter, .opacity-leave-to /* .opacity-leave-active in below version 2.1.8 */ {
-    opacity: 0
-  }
   .autoHeight-enter-active, .autoHeight-leave-active {
     transition: all .3s linear
     height 68px

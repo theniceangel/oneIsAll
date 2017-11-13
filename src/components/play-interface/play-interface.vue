@@ -21,16 +21,16 @@
           </p>
           <p class="singer">{{currentSong.singers}}</p>
           <div class="btn-grounp">
-            <span class="prev" v-if="showPrevAndNext"><i class="icon-backwardfill"></i></span>
+            <span class="prev" v-if="showPrevAndNext"><i class="icon-playback-fast-forward"></i></span>
             <span class="play" @click.stop="togglePlay"><i :class="cls"></i></span>
-            <span class="next" v-if="showPrevAndNext"><i class="icon-play_forward_fill"></i></span>
+            <span class="next" v-if="showPrevAndNext"><i class="icon-playback-rewind"></i></span>
           </div>
           <div class="bottom">
             <span class="mode" @click.stop="setPlayingMode"><i :class="modeCls"></i></span>
             <span class="origin"><img  width="14" src="~common/images/xiami-logo.png" alt="">来自虾米音乐</span>
             <span class="add-and-turn">
-              <i class="icon-plus-square" :class="storeCls" @click.stop="store"></i>
-              <i class="icon-share"></i>
+              <i class="icon-add_box" :class="storeCls" @click.stop="store"></i>
+              <i class="icon-wrap_text"></i>
             </span>
           </div>
         </div>
@@ -68,11 +68,11 @@
         'storeList'
       ]),
       cls () {
-        let cls = this.playingState ? 'icon-stop' : 'icon-playfill'
+        let cls = this.playingState ? 'icon-playback-pause' : 'icon-playback-play'
         return cls
       },
       modeCls () {
-        let cls = this.playingMode === 0 ? 'icon-sequence' : 'icon-loop'
+        let cls = this.playingMode === 0 ? 'icon-dehaze' : 'icon-repeat_one'
         return cls
       },
       curTime () {
@@ -258,6 +258,7 @@
         display flex
         .mode
           width 28px
+          float left
         .origin
           flex 1
           display flex
@@ -265,7 +266,7 @@
           justify-content center
           img
             margin 1px 4px 0 0
-        .icon-plus-square
+        .icon-add_box
           margin-right 15px
           &.active
             color #f47474
