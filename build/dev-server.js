@@ -25,7 +25,7 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 var routers = express.Router()
-// 根据日期获取某一天的Home组件列表 /api/onelist/2017-08-09/
+// 根据日期获取某一天的one组件列表 /api/onelist/2017-08-09/
 routers.get('/onelist/:date/:cityName', function (req, res) {
   console.log(req.ip)
   // 通过fiddler抓包后发现，必须要待version参数，要不然返回的数据比实际数据少了一条
@@ -37,9 +37,9 @@ routers.get('/onelist/:date/:cityName', function (req, res) {
     console.log(e)
   })
 })
-// 获取read组件下面的列表
-routers.get('/channel/reading/more/:id', function (req, res) {
-  var url = 'http://v3.wufazhuce.com:8000/api/channel/reading/more/'+ req.params.id + '?version=v4.2.2'
+// 获取all组件下面的轮播图
+routers.get('/bannerList', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/banner/list/3?version=v4.3.3'
   axios.get(url).then((response) => {
     res.json(response.data)
   }).catch((e) => {

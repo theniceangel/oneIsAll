@@ -15,10 +15,13 @@ export default {
   playList (state) {
     return state.playList
   },
-  storeList (state) {
-    return state.storeList
+  storeMusicList (state) {
+    return state.storeMusicList
   },
   shareItem (state) {
     return state.shareItem
+  },
+  favoriteItemList (state) {
+    return state.favoriteItemList
   }
 }

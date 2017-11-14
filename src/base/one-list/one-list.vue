@@ -11,7 +11,7 @@
             <p class="words_info">{{item.words_info}}</p>
           </div>
           <div class="padding">
-            <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count" ></bottom-operate>
+            <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts.sync="item.like_count" :id="item.id" ></bottom-operate>
           </div>
           <!-- 点击海报之后的弹窗-->
           <transition
@@ -64,7 +64,7 @@
             </div>
             <p class="article-forward">{{item.forward}}</p>
           </div>
-          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count"></bottom-operate>
+          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts.sync="item.like_count" :id="item.id"></bottom-operate>
         </template>
         <!-- 如果是首页的一个音乐 -->
         <template v-if="item.category === '4'">
@@ -90,7 +90,7 @@
             <p class="music-info">{{item.music_name}}·{{item.audio_author}}|{{item.audio_album}}</p>
             <p class="article-forward">{{item.forward}}</p>
           </div>
-          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count"></bottom-operate>
+          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts.sync="item.like_count" :id="item.id"></bottom-operate>
         </template>
         <!-- 如果是首页的一个影视 -->
         <template v-if="item.category === '5'">
@@ -115,7 +115,7 @@
             <p class="article-forward">{{item.forward}}</p>
             <p class="subtitle">——《{{item.subtitle}}》</p>
           </div>
-          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts="item.like_count"></bottom-operate>
+          <bottom-operate :category="item.category" :postDate="item.post_date" :shareList="item.share_list" :favoriteCounts.sync="item.like_count" :id="item.id"></bottom-operate>
         </template>
         <!-- 如果是首页的深夜电台 -->
         <template v-if="item.category === '8'">
@@ -136,7 +136,7 @@
             </div>
           </div>
           <div class="space10">
-            <bottom-operate :volume='item.volume' :category="item.category" :shareList="item.share_list" :postDate="item.post_date" :favoriteCounts="item.like_count"></bottom-operate>
+            <bottom-operate :volume='item.volume' :category="item.category" :shareList="item.share_list" :postDate="item.post_date" :favoriteCounts.sync="item.like_count" :id="item.id"></bottom-operate>
           </div>
         </template>
       </li>

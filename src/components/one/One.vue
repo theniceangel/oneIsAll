@@ -20,18 +20,20 @@
           </div>
         </div>
       </scroll>
-    </transition>
+    </transition >
     <!-- 分享弹窗-->
+    <transition :duration="{leave: 300}">
       <div class="share-popup" v-show="shareItem.length" @click="clearShareItem">
         <i class="icon-close" @click.stop="clearShareItem"></i>
         <transition-group
-          @before-enter="postBeforeEnter"
+          @before-enter="popupBeforeEnter"
           @enter="popupEnter"
           @leave="popupLeave"
         >
           <span ref="shareIcon"  :class="getCls(item.type)" v-for="(item, index) in shareItemArr" :key="item.type"></span>
         </transition-group>
       </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -149,7 +151,7 @@
       getCls (key) {
         return CLASS_MAP[this.camelizeString(key)]
       },
-      postBeforeEnter (el) {
+      popupBeforeEnter (el) {
         let {w, h} = getScreenInfo()
         let index = SEQUENCE_MAP[this.camelizeString(el.className.split(' ')[0])]
         let animationInfo = {
@@ -179,7 +181,7 @@
           }
         })
         Animations.registerAnimation({
-          name: `seperate`,
+          name: `seperate${index}`,
           // the actual array of animation changes
           animation: [
             {
@@ -202,7 +204,8 @@
         })
       },
       popupLeave (el, done) {
-        Animations.runAnimation(el, `seperate`, () => {
+        let index = SEQUENCE_MAP[this.camelizeString(el.className.split(' ')[0])]
+        Animations.runAnimation(el, `seperate${index}`, () => {
           done && done()
         })
       }

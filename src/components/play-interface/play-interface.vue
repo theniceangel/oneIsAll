@@ -65,7 +65,7 @@
         'playingState',
         'playingMode',
         'playList',
-        'storeList'
+        'storeMusicList'
       ]),
       cls () {
         let cls = this.playingState ? 'icon-playback-pause' : 'icon-playback-play'
@@ -92,7 +92,7 @@
         return flag
       },
       storeCls () {
-        let index = findIndexInArray(this.storeList, this.currentSong.id)
+        let index = findIndexInArray(this.storeMusicList, this.currentSong.id)
         if (index > -1) {
           return 'active'
         }
@@ -103,7 +103,7 @@
       ...mapMutations({
         setPlayingMode: 'SET_PLAYING_MODE',
         setPlayingState: 'SET_PLAYING_STATE',
-        setStoreList: 'SET_STORE_LIST'
+        setStoreMusicList: 'SET_STORE_MUSIC_LIST'
       }),
       hide () {
         this.$emit('hideInterface')
@@ -157,7 +157,7 @@
         this.$emit('percentChange', this.touch.percent)
       },
       store () {
-        this.setStoreList(this.currentSong.id)
+        this.setStoreMusicList(this.currentSong.id)
         if (this.storeCls.includes('active')) {
           this.$toast({
             content: '已收藏<br/>可在个人中心中查找',
