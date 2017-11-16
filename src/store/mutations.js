@@ -1,5 +1,5 @@
 import * as types from './mutations-types'
-import {setStoreMusicList, setFavoriteList} from 'common/js/cache'
+import {setStoreMusicList, setFavoriteList, setWatchAuthorList} from 'common/js/cache'
 export default {
   [types.SET_CURRENT_DATE]  (state, date) {
     state.currentDate = date
@@ -27,5 +27,8 @@ export default {
   },
   [types.SET_FAVORITE_ITEM_LIST]  (state, id) {
     state.favoriteItemList = setFavoriteList(id)
+  },
+  [types.SET_WATCH_AUTHOR_LIST]  (state, id) {
+    state.watchAuthorList = setWatchAuthorList(id)
   }
 }

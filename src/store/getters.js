@@ -23,5 +23,8 @@ export default {
   },
   favoriteItemList (state) {
     return state.favoriteItemList
+  },
+  watchAuthorList (state) {
+    return state.watchAuthorList
   }
 }

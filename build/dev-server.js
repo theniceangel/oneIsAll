@@ -46,6 +46,24 @@ routers.get('/bannerList', function (req, res) {
     console.log(e)
   })
 })
+// 获取all组件下面的近期热门作者
+routers.get('/authorList', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/author/hot?version=v4.3.3'
+  axios.get(url).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
+// 获取all组件下面的所有人问所有人推荐的四个专题
+routers.get('/recommendTopics', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/banner/list/5?version=v4.3.3'
+  axios.get(url).then((response) => {
+    res.json(response.data)
+  }).catch((e) => {
+    console.log(e)
+  })
+})
 // 获取music组件下面的列表
 routers.get('/channel/music/more/:id', function (req, res) {
   var url = 'http://v3.wufazhuce.com:8000/api/channel/music/more/'+ req.params.id + '?version=v4.2.2'

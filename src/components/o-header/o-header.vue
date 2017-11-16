@@ -21,10 +21,15 @@
     background-color: white
     padding 0 12px
     z-index 10
+    width 100%
+    box-sizing border-box
     color $color-desc
     border-1px-bottom($color-desc)
     font-size $font-size-medium
     display flex
+    position fixed
+    top 0
+    left 0
     i
       font-size $font-size-medium
       display inline-block

@@ -43,39 +43,38 @@ function GetYesterdayDate (currentDay, subtractionDayCount) {
   var day = padString(temp.getDate().toString(), 2, 0)
   return `${year}-${month}-${day}`
 }
-/**
- * raf polyfill
- */
-const DEFAULT_INTERVAL = 1000 / 60
-let requestAnimationFrame = (function () {
-  return window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame ||
-    // 所有都不支持，用setTimeout兼容
-    function (callback) {
-      return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL))  // make interval as precise as possible.
+// 从某个数组里面随机取出不重复的n个元素
+function getNoneDuplicateFromArr (arr, count) {
+  let ret = [] // 返回的不重复的n个元素组成的数组
+  let copy = arr.slice()
+  if (!Array.isArray(arr) || arr === undefined) {
+    console.error('the first parameter must be an array')
+    return ret
+  }
+  if (typeof count === 'string') {
+    count = Number(count)
+  }
+  if (arr.length < count) {
+    console.error('the second parameter can not exceed the length of array')
+    return ret
+  }
+  function getNoneDuplicateEle (copy, count) {
+    let result = []
+    for (let i = 0; i < count; i++) {
+      let random = Math.random() * copy.length | 0
+      result.push(copy[random])
+      copy.splice(random, 1)
     }
-})()
-
-/**
- * cancel raf polyfill
- */
-let cancelAnimationFrame = (function () {
-  return window.cancelAnimationFrame ||
-    window.webkitCancelAnimationFrame ||
-    window.mozCancelAnimationFrame ||
-    window.oCancelAnimationFrame ||
-    function (id) {
-      window.clearTimeout(id)
-    }
-})()
+    return result
+  }
+  ret = getNoneDuplicateEle(copy, count)
+  return ret
+}
 export {
   countTime,
   findIndexInArray,
   getCurrentDate,
   padString,
   GetYesterdayDate,
-  requestAnimationFrame,
-  cancelAnimationFrame
+  getNoneDuplicateFromArr
 }
