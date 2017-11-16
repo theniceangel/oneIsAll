@@ -20,9 +20,9 @@ routers.get('/onelist/:date/:cityName', function (req, res) {
     console.log(e)
   })
 })
-// 获取read组件下面的列表
-routers.get('/channel/reading/more/:id', function (req, res) {
-  var url = 'http://v3.wufazhuce.com:8000/api/channel/reading/more/' + req.params.id + '?version=v4.2.2'
+// 获取all组件下面的轮播图
+routers.get('/bannerList', function (req, res) {
+  var url = 'http://v3.wufazhuce.com:8000/api/banner/list/3?version=v4.3.3'
   axios.get(url).then((response) => {
     res.json(response.data)
   }).catch((e) => {

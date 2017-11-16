@@ -1,5 +1,6 @@
 <template>
   <div class="box">
+    <!-- 轮播图-->
     <div class="slide-wrapper" v-if="sliderImgs.length">
       <div class="slide-content">
         <slider>
@@ -8,6 +9,10 @@
           </div>
         </slider>
       </div>
+    </div>
+    <!-- 分类导航-->
+    <div class="category-nav">
+      <div class="category-nav-title">分类导航</div>
     </div>
   </div>
 </template>
