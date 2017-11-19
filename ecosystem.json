@@ -1,7 +1,7 @@
 {
   // Applications part
   "apps" : [{
-    "name"      : "one-vue",
+    "name"      : "test",
     "script"    : "prod.server.js",
     "env": {
       "COMMON_VARIABLE": "true"
