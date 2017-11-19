@@ -9,7 +9,9 @@
     props: {
       data: {
         type: Array,
-        default: []
+        default () {
+          return []
+        }
       },
       refreshDelay: {
         type: Number,

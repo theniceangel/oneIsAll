@@ -219,7 +219,6 @@
             this.lastId = this.topicsList[(this.topicsList.length - 1)].id
             // 如果data为空数组，说明没有更多数据了
             this.topicsList.length ? this.isBottom = true : this.isBottom = false
-            console.log('getTopic' + this.isBottom)
             // 监听滚动事件
             window.addEventListener('scroll', () => {
               let scrollHeight = this.$refs.box.scrollHeight
