@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="box" ref="box">
     <!-- 轮播图-->
     <div class="slide-wrapper" v-if="sliderImgs.length">
       <div class="slide-content">
@@ -47,38 +47,66 @@
       <div class="recommend-topic">
         <div class="recommend-topic-title">所有人问所有人</div>
         <div class="recommend-topic-wrapper">
-          <ul class="clearfix" ref="carouselWrapper">
+          <ul class="clearfix" ref="carouselWrapper"
+              @touchstart.prevent="recTouchStart"
+              @touchmove.prevent="recTouchMove"
+              @touchend="recTouchEnd">
             <li v-for="topic in recommendTopics" ref="carouselItems">
               <img  :src="topic.cover" alt="">
+              <p class="recommend-topic-title">{{topic.title}}</p>
+              <i><span>专题</span></i>
             </li>
           </ul>
         </div>
       </div>
+      <!-- 专题-->
+      <div class="topics">
+        <div class="topic-item"  v-for="topic in topicsList">
+          <div class="topic-item-img-wrapper">
+            <img :src="topic.cover" alt="">
+            <i><span>专题</span></i>
+          </div>
+          <p class="topic-item-title">{{topic.title}}</p>
+        </div>
+      </div>
+      <!-- loading 动画-->
+      <loading v-if="isBottom"></loading>
+      <!-- 没有更多数据了-->
+      <p class="no-more" v-if="noMore">{{noMoreText}}</p>
     </div>
   </div>
 </template>
 <script>
-  import slider from 'base/slider/slider.vue'
-  import {findIndexInArray, getNoneDuplicateFromArr} from 'common/js/util'
+  import slider from 'base/slider/slider'
+  import loading from 'base/loading/loading'
+  import {findIndexInArray, getNoneDuplicateFromArr, getPrefixStyle} from 'common/js/util'
   import {mapMutations, mapGetters} from 'vuex'
+  const TRANSFORM = getPrefixStyle('transform')
+  const TRANSITION = getPrefixStyle('transition')
+  const THRESHOLD = 30 // 所有人对所有人板块滑动的阈值
   export default {
     data () {
       return {
         sliderImgs: [], // 轮播图
         authorList: [], // 热门作者所有数据
         pickedAuthorList: [],  // 每次随机出来的三个作者
-        recommendTopics: [] // 所有人问所有人推荐的四个专题
+        recommendTopics: [], // 所有人问所有人推荐的四个专题
+        topicsList: [], // 所有的专题
+        isBottom: false, // 是否下滑到底部了
+        lastId: 0,
+        noMore: false, // 是否没有更多的数据
+        noMoreText: '没有更对数据了...' // 没有更多数据了
       }
     },
     created () {
+      // 运用于所有人问所有人的touch事件
+      this.touch = {}
       this.getSliderImgs()
       this.getAuthorList()
       this.getRecommendTopics()
+      this.getTopic()
     },
     mounted () {
-      setTimeout(() => {
-        this.initCarousel()
-      }, 1000)
     },
     methods: {
       ...mapMutations({
@@ -124,6 +152,8 @@
           let data = res.data
           if (data.res === 0) {
             this.recommendTopics = data.data
+            // 确保图片已经渲染
+            this.initCarousel()
           }
         })
       },
@@ -132,9 +162,91 @@
         this._setWidth()
       },
       _setWidth () {
-        let children = this.$refs.carouselWrapper.children
-        let len = children.length
-        this.$refs.carouselWrapper.style.width = (this.$refs.carouselItems[0].clientWidth + parseInt(getComputedStyle(this.$refs.carouselItems[0]).marginRight)) * len + 'px'
+        this.$nextTick(() => {
+          let children = this.$refs.carouselWrapper.children
+          let len = children.length
+          this.$refs.carouselWrapper.style.width = (this.$refs.carouselItems[0].clientWidth + parseInt(getComputedStyle(this.$refs.carouselItems[0]).marginRight)) * len + 'px'
+        })
+      },
+      recTouchStart (e) {
+        let wrapperDom = this.$refs.carouselWrapper
+        let remainTransform = getComputedStyle(wrapperDom)[TRANSFORM] === 'none' ? 0 : getComputedStyle(wrapperDom)[TRANSFORM].split(',')[4].replace(' ', '')
+        this.touch.init = true
+        this.touch.startX = e.touches[0].pageX
+        this.touch.remainTransform = parseInt(remainTransform)
+      },
+      recTouchMove (e) {
+        // 如果touch事件未初始化
+        let wrapperDom = this.$refs.carouselWrapper
+        if (!this.touch.init) return
+        let deltaX = e.touches[0].pageX - this.touch.startX + this.touch.remainTransform
+        let minDeltaX = -THRESHOLD - parseInt(wrapperDom.style.width) + document.documentElement.clientWidth - 15
+        let maxDeltaX = THRESHOLD
+        let resolveDeltaX = Math.min(Math.max(deltaX, minDeltaX), maxDeltaX)
+        this.touch.endDeltaX = resolveDeltaX
+        wrapperDom.style[TRANSFORM] = `translateX(${resolveDeltaX}px)`
+        wrapperDom.style[TRANSITION] = 'all 0.3s cubic-bezier(.5,.43,.49,1.01)'
+      },
+      recTouchEnd (e) {
+        let wrapperDom = this.$refs.carouselWrapper
+        let endDeltaX = this.touch.endDeltaX
+        let maxDeltaX = THRESHOLD
+        let minDeltaX = -THRESHOLD - parseInt(wrapperDom.style.width) + document.documentElement.clientWidth - 15
+        if (endDeltaX <= maxDeltaX && endDeltaX >= 0) {
+          wrapperDom.style[TRANSFORM] = `translateX(0)`
+          wrapperDom.style[TRANSITION] = 'all 0.1s cubic-bezier(0.215, 0.610, 0.355, 1.000)'
+          wrapperDom.addEventListener('transition', () => {
+            this.touch.init = false
+          })
+        } else if (endDeltaX >= minDeltaX && endDeltaX <= (minDeltaX + THRESHOLD)) {
+          console.log(minDeltaX)
+          wrapperDom.style[TRANSFORM] = `translateX(${minDeltaX + THRESHOLD}px)`
+          wrapperDom.style[TRANSITION] = 'all 0.1s cubic-bezier(0.215, 0.610, 0.355, 1.000)'
+          wrapperDom.addEventListener('transition', () => {
+            this.touch.init = false
+          })
+        }
+      },
+      // 获取专题列表
+      getTopic () {
+        let url = `/api/topics/${this.lastId}`
+        this.$axios.get(url).then((res) => {
+          let data = res.data
+          if (data.res === 0) {
+            this.topicsList = data.data
+            this.lastId = this.topicsList[(this.topicsList.length - 1)].id
+            // 如果data为空数组，说明没有更多数据了
+            this.topicsList.length ? this.isBottom = true : this.isBottom = false
+            console.log('getTopic' + this.isBottom)
+            // 监听滚动事件
+            window.addEventListener('scroll', () => {
+              let scrollHeight = this.$refs.box.scrollHeight
+              let clientHeight = document.documentElement.clientHeight
+              let scrollTop = document.documentElement.scrollTop
+              if (clientHeight + scrollTop === scrollHeight) {
+                // 滚动到了底部
+                if (this.noMore) return
+                this.getMoreTopic()
+              }
+            })
+          }
+        })
+      },
+      // 获取更多专题列表
+      getMoreTopic () {
+        let url = `/api/topics/${this.lastId}`
+        this.$axios.get(url).then((res) => {
+          let data = res.data
+          if (data.res === 0) {
+            this.topicsList = this.topicsList.concat(data.data)
+            this.lastId = this.topicsList[(this.topicsList.length - 1)].id
+            // 如果data为空数组，说明没有更多数据了
+            if (!data.data.length) {
+              this.isBottom = false
+              this.noMore = true
+            }
+          }
+        })
       }
     },
     computed: {
@@ -143,7 +255,8 @@
       ])
     },
     components: {
-      slider
+      slider,
+      loading
     }
   }
 </script>
@@ -294,11 +407,86 @@
               padding-top 104px
               margin-right 15px
               position relative
-              display  inline-block
+              float left
+              display  table
               img
                 position absolute
                 top 0
                 left 0
                 width 100%
                 height 100%
+              .recommend-topic-title
+                padding 0 5px
+                position absolute
+                text-align center
+                top 50%
+                left 50%
+                transform translate(-50%)
+                width 100%
+                box-sizing border-box
+                text-overflow ellipsis
+                overflow hidden
+                white-space nowrap
+                color white
+              i
+                position absolute
+                left 0
+                top 0
+                width 0
+                height 0
+                border 30px solid rgba(0, 0, 0, 0.4)
+                border-bottom 30px solid transparent
+                border-right 30px solid transparent
+                font-style normal
+                span
+                  color white
+                  position absolute
+                  left -25px
+                  top -15px
+                  font-size 6px
+                  transform-origin center
+                  transform rotate(315deg)
+      .topics
+        .topic-item
+          margin-top 15px
+          padding 15px 12px 30px
+          background-color white
+        .topic-item-img-wrapper
+          position relative
+          width 100%
+          padding-top 60%
+          background-color aquamarine
+          img
+            position absolute
+            top 0
+            left 0
+            width 100%
+            height 100%
+          i
+            position absolute
+            left 0
+            top 0
+            width 0
+            height 0
+            border 30px solid rgba(0, 0, 0, 0.4)
+            border-bottom 30px solid transparent
+            border-right 30px solid transparent
+            font-style normal
+            span
+              color white
+              position absolute
+              left -25px
+              top -15px
+              font-size 6px
+              transform-origin center
+              transform rotate(315deg)
+        .topic-item-title
+          margin-top 20px
+          text-align left
+          color $color-content
+          line-height 1.2
+      .no-more
+        text-align center
+        line-height: 2;
+        padding: 10px 0;
 </style>

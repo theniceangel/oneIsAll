@@ -70,11 +70,40 @@ function getNoneDuplicateFromArr (arr, count) {
   ret = getNoneDuplicateEle(copy, count)
   return ret
 }
+// css能力检测
+let elementStyle = document.createElement('p').style
+let vendor = (function getVendor () {
+  const prefixMap = {
+    webkit: 'webkitTransform',
+    Moz: 'MozTransform',
+    O: 'OTransform',
+    ms: 'msTransform',
+    standard: 'transfrom'
+  }
+  for (let key in prefixMap) {
+    if (prefixMap.hasOwnProperty(key)) {
+      if (elementStyle[prefixMap[key]] !== null) {
+        if (key === 'standard') {
+          key = ''
+        }
+        return key
+      }
+    }
+  }
+  return false
+})()
+function getPrefixStyle (css) {
+  if (vendor === false) {
+    return false
+  }
+  return vendor + css.charAt(0).toUpperCase() + css.substr(1)
+}
 export {
   countTime,
   findIndexInArray,
   getCurrentDate,
   padString,
   GetYesterdayDate,
-  getNoneDuplicateFromArr
+  getNoneDuplicateFromArr,
+  getPrefixStyle
 }
