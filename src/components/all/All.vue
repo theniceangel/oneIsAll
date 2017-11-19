@@ -1,5 +1,6 @@
 <template>
-  <div class="box" ref="box">
+  <transition name="slide-up">
+    <div class="box" ref="box">
     <!-- 轮播图-->
     <div class="slide-wrapper" v-if="sliderImgs.length">
       <div class="slide-content">
@@ -75,6 +76,7 @@
       <p class="no-more" v-if="noMore">{{noMoreText}}</p>
     </div>
   </div>
+  </transition>
 </template>
 <script>
   import slider from 'base/slider/slider'
@@ -489,4 +491,10 @@
         text-align center
         line-height: 2;
         padding: 10px 0;
+  .slide-up-enter-active /*, .slide-up-leave-active */ {
+    transition: opacity .5s
+  }
+  .slide-up-enter /*, .slide-up-leave-to .fade-leave-active in below version 2.1.8 */ {
+    opacity: 0
+  }
 </style>

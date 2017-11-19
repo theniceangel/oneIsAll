@@ -1,6 +1,13 @@
 <template>
   <div class="box">
     <transition name="slide-left">
+      <header>
+        <div class="person-title">
+          baby智
+          <i class="icon-mail"></i>
+        </div>
+        <div class="person-avatar"></div>
+      </header>
     </transition>
   </div>
 </template>
@@ -20,21 +27,19 @@
 </script>
 <style scoped lang="stylus">
   @import '~common/style/var.styl'
-  .container
-    position fixed
-    top 40px
-    width 100%
-    z-index 2
-    background-color $background
-    bottom 50px
-    overflow hidden
-    .prev-wrapper
-      padding 40px 0
-      width 100%
+  header
+    padding 0 12px
+    .person-title
+      line-height 30px
       text-align center
-      background-color $background
-  .slide-left-enter-active
-    transition: all .5s
-  .slide-left-enter
-    transform translate3d(-100%, 0, 0)
+      position relative
+      font-size 16px
+      .icon-mail
+        position absolute
+        right 0
+        top 0
+        line-height 30px
+        height 100%
+        color white
+        font-size 20px
 </style>

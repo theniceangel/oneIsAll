@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <o-header></o-header>
+    <o-header v-if="!isMe"></o-header>
     <keep-alive>
       <router-view :key="$route.path"></router-view>
     </keep-alive>
@@ -64,7 +64,8 @@
     data () {
       return {
         showInterface: false, // 控制播放器页面的显隐
-        currentTime: 0 // 设置当前音乐播放到哪个时间点了
+        currentTime: 0, // 设置当前音乐播放到哪个时间点了
+        isMe: false // 除了me页签外，其他页签是没有header组件的
       }
     },
     watch: {
@@ -80,6 +81,13 @@
             const audio = this.$refs.audio
             audio.play()
           })
+        }
+      },
+      $route (newVal) {
+        if (newVal.path === '/me') {
+          this.isMe = true
+        } else {
+          this.isMe = false
         }
       }
     },
