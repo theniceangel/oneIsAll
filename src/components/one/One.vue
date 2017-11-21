@@ -11,7 +11,7 @@
         <!-- 首页顶部-->
         <div class="wrapper">
           <div>
-            <weather v-if="list.length"  :curDate="curDate" :weather="weather" :city="city"></weather>
+            <weather v-if="list.length"  :curDate="curDate" :temparature="temparature" :weather="weather" :city="city"></weather>
             <one-list :list="list" :menu="menu" @showMenu="refreshBS" @refreshBS="refreshBS"></one-list>
             <!-- 切换到昨天 -->
             <div @click="routerToYesterday" class="prev-wrapper"  v-if="list.length">
@@ -67,6 +67,7 @@
       return {
         curDate: '',
         weather: '',
+        temparature: '',
         city: '',
         list: [],
         listenScroll: true,
@@ -96,6 +97,7 @@
           let data = res.data.data
           this.curDate = data.weather.date
           this.weather = data.weather.climate
+          this.temparature = data.weather.temperature
           this.city = data.weather.city_name
           this.menu = data.menu
           this.list = this._normalizeList(data.content_list)
@@ -239,7 +241,7 @@
   @import '~common/style/var.styl'
   .container
     position fixed
-    top 40px
+    top 0
     width 100%
     z-index 2
     background-color $background

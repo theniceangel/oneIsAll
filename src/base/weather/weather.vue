@@ -18,6 +18,10 @@
       city: {
         type: String,
         default: '上海'
+      },
+      temparature: {
+        type: String,
+        default: ''
       }
     },
     computed: {
@@ -26,7 +30,7 @@
         return `${ret[0]} / ${ret[1]} / ${ret[2]}`
       },
       formatCityAndWeather () {
-        return `${this.weather}， ${this.city}`
+        return `${this.city}   ${this.weather}   ${this.temparature}°C`
       }
     }
   }

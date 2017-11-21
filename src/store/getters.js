@@ -3,6 +3,9 @@ export default {
   currentDate (state) {
     return state.currentDate
   },
+  showFooter (state) {
+    return state.showFooter
+  },
   currentSong (state) {
     return state.playList[state.currentPlayIndex] || {}
   },

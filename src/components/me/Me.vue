@@ -1,6 +1,5 @@
 <template>
-  <transition name="slide-left">
-    <div class="box">
+    <div class="box" ref="box1">
       <scroll class="container"
       @scroll="scroll"
       :listenScroll="listenScroll">
@@ -11,7 +10,7 @@
               <i class="icon-mail"></i>
             </div>
             <div class="person-avatar">
-              <img src="../../common/images/person-avatar.png" width="40px" alt="">
+              <img src="../../common/images/person-avatar.png" width="100px" alt="">
               <p>无名氏</p>
             </div>
           </div>
@@ -27,29 +26,31 @@
           </ul>
         </div>
         <!-- 我的关注-->
-        <div class="my-watch-container">
+        <div class="my-watch-container" @click.stop="gotoWatch()">
           <i class="icon-users"></i>
           <span>我的关注</span>
           <div>
-            <span>1</span>
             <i class="icon-chevron-right"></i>
+            <span v-if="watchCount">{{watchCount}}</span>
           </div>
         </div>
         <!-- 我的歌单-->
-        <div class="my-songsheet-container">
+        <div class="my-songsheet-container" @click.stop="gotoSongsheet()">
           <i class="icon-play-circle"></i>
           <span>我的歌单</span>
           <div>
-            <span>1</span>
             <i class="icon-chevron-right"></i>
+            <span>1</span>
           </div>
         </div>
       </div>
     </scroll>
+      <router-view></router-view>
     </div>
-  </transition>
 </template>
 <script>
+  import {mapMutations} from 'vuex'
+  import {getWatchAuthorList} from 'common/js/cache'
   import Scroll from 'base/scroll/scroll'
   export default {
     data () {
@@ -80,14 +81,39 @@
         listenScroll: true
       }
     },
+    computed: {
+      watchCount () {
+        return getWatchAuthorList().length
+      }
+    },
     mounted () {
     },
     methods: {
+      ...mapMutations({
+        setShowFooter: 'SET_SHOW_FOOTER'
+      }),
       scroll (pos) {
         this.scrollY = pos.y
+      },
+      gotoWatch () {
+        this.$router.push({
+          path: '/me/watch'
+        })
+      },
+      gotoSongsheet () {
+        this.$router.push({
+          path: '/me/songsheet'
+        })
       }
     },
-    computed: {
+    watch: {
+      $route (newVal) {
+        if (newVal.path.includes('watch') || newVal.path.includes('songsheet')) {
+          console.log(1111)
+          this.$refs.box1.style.bottom = '30px'
+          console.log(getComputedStyle(this.$refs.box1).bottom)
+        }
+      }
     },
     components: {
       Scroll
@@ -167,15 +193,15 @@
           margin-top 5px
           font-size 12px
   .my-watch-container
-    height 30px
+    height 50px
     display flex
     align-content center
     background-color white
     margin 10px 0
-    line-height 30px
+    line-height 50px
     padding-right 12px
     i
-      line-height 30px
+      line-height 50px
       &.icon-users
         margin 0 15px 0 12px
     span
@@ -185,16 +211,17 @@
       width 30px
       display: flex;
       align-items: center;
+      flex-direction row-reverse;
   .my-songsheet-container
-    height 30px
+    height 50px
     display flex
     align-content center
     background-color white
     margin 10px 0
-    line-height 30px
+    line-height 50px
     padding-right 12px
     i
-      line-height 30px
+      line-height 50px
       &.icon-play-circle
         margin 0 15px 0 12px
     span
@@ -204,4 +231,5 @@
       width 30px
       display: flex;
       align-items: center;
+      flex-direction row-reverse;
 </style>

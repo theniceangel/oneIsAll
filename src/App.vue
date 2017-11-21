@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <o-header v-if="!isMe"></o-header>
     <keep-alive>
       <router-view :key="$route.path"></router-view>
     </keep-alive>
-    <o-footer></o-footer>
+    <o-footer v-if="showFooter"></o-footer>
     <!-- 播放器-->
     <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @ended="end" @timeupdate="updateTime"></audio>
     <!-- 贴在右上角的圆形播放器缩略图-->
@@ -15,7 +14,6 @@
 </template>
 
 <script>
-  import OHeader from 'components/o-header/o-header'
   import OFooter from 'components/o-footer/o-footer'
   import CirclePlay from 'components/circle-play/circle-play'
   import PlayInterface from 'components/play-interface/play-interface'
@@ -65,7 +63,8 @@
       return {
         showInterface: false, // 控制播放器页面的显隐
         currentTime: 0, // 设置当前音乐播放到哪个时间点了
-        isMe: false // 除了me页签外，其他页签是没有header组件的
+        showHeader: true, // 除了me页签外，其他页签是没有header组件的
+        showFooter: true
       }
     },
     watch: {
@@ -84,15 +83,20 @@
         }
       },
       $route (newVal) {
-        if (newVal.path === '/me') {
-          this.isMe = true
+        console.log(newVal)
+        if (newVal.path.includes('/me')) {
+          this.showHeader = false
         } else {
-          this.isMe = false
+          this.showHeader = true
+        }
+        if (newVal.path.includes('/watch') || newVal.path.includes('/songsheet')) {
+          this.showFooter = false
+        } else {
+          this.showFooter = true
         }
       }
     },
     components: {
-      OHeader,
       OFooter,
       CirclePlay,
       PlayInterface

@@ -105,6 +105,7 @@ routers.get('/song/playlist/id/:id', function (req, res) {
     song.name = result.playlist.trackList.track.songName
     song.url = utils.genRealPathOfXiami(result.playlist.trackList.track.location)
     song.coverUrl = result.playlist.trackList.track.album_pic
+    song.albumName = result.playlist.trackList.track.album_name
     res.json(song)
   }).catch((e) => {
     console.log(e)

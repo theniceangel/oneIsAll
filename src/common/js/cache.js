@@ -1,25 +1,28 @@
 // 存放localstorage本地存储的一些数据
 import storage from 'good-storage'
 import {findIndexInArray} from 'common/js/util'
-const STORE_LIST = '__STORE_LIST__'
+import {createAuthor} from 'common/js/class/author'
+const STORE_MUSIC_LIST = '__MUSIC_STORE_LIST__'
 const FAVORITE_ITEM_LIST = '__FAVORITE_ITEM_LIST__'
 const WATCH_AUTHOR_LIST = '__WATCH_AUTHOR_LIST__'
 // 获取用户收藏的歌单
 export function getStoreMusicList () {
-  let storeList = storage.get(STORE_LIST, [])
-  return storeList
+  let storeMusicList = storage.get(STORE_MUSIC_LIST, [])
+  return storeMusicList
 }
 // 设置用户收藏的歌单
-export function setStoreMusicList (songId) {
-  let storeList = storage.get(STORE_LIST, [])
-  let index = findIndexInArray(storeList, songId)
+export function setStoreMusicList (song) {
+  let storeMusicList = storage.get(STORE_MUSIC_LIST, [])
+  let index = storeMusicList.findIndex((item) => {
+    return item.id === song.id
+  })
   if (index > -1) {
-    storeList.splice(index, 1)
+    storeMusicList.splice(index, 1)
   } else {
-    storeList.push(songId)
+    storeMusicList.push(song)
   }
-  storage.set(STORE_LIST, storeList)
-  return storeList
+  storage.set(STORE_MUSIC_LIST, storeMusicList)
+  return storeMusicList
 }
 // 获取用户喜欢的列表
 export function getFavoriteList () {
@@ -44,13 +47,15 @@ export function getWatchAuthorList () {
   return watchAuthorList
 }
 // 设置用户关注的作者列表
-export function setWatchAuthorList (id) {
+export function setWatchAuthorList (author) {
   let watchAuthorList = storage.get(WATCH_AUTHOR_LIST, [])
-  let index = findIndexInArray(watchAuthorList, id)
+  let index = watchAuthorList.findIndex((item) => {
+    return item.id === author.user_id
+  })
   if (index > -1) {
     watchAuthorList.splice(index, 1)
   } else {
-    watchAuthorList.push(id)
+    watchAuthorList.push(createAuthor(author))
   }
   storage.set(WATCH_AUTHOR_LIST, watchAuthorList)
   return watchAuthorList

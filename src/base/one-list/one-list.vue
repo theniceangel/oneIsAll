@@ -343,17 +343,6 @@
     watch: {
       showMenu () {
         this.$emit('showMenu')
-      },
-      showPost (newVal) { // 监听是否显示全屏海报
-        if (newVal) {
-          this.$parent.$el.style.top = 0
-          this.$parent.$el.style.bottom = 0
-          this.$parent.$el.style.zIndex = 9999
-        } else {
-          this.$parent.$el.style.top = 40 + 'px'
-          this.$parent.$el.style.bottom = 50 + 'px'
-          this.$parent.$el.style.zIndex = 2
-        }
       }
     },
     components: {

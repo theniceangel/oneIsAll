@@ -7,6 +7,7 @@ export default class Song {
     this.name = ''
     this.url = ''
     this.coverUrl = ''
+    this.albumName = ''
   }
   initXiamiMusicInfo (id) {
     let url = `/api/song/playlist/id/${id}`
@@ -34,6 +35,7 @@ export default class Song {
           this.name = data.name
           this.url = data.url
           this.coverUrl = data.coverUrl
+          this.albumName = data.albumName
           resolve()
         }
       }

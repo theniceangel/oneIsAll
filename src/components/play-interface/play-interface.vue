@@ -40,7 +40,6 @@
 </template>
 <script>
   import {mapGetters, mapMutations} from 'vuex'
-  import {findIndexInArray} from 'common/js/util'
   export default {
     props: {
       showInterface: {
@@ -92,7 +91,9 @@
         return flag
       },
       storeCls () {
-        let index = findIndexInArray(this.storeMusicList, this.currentSong.id)
+        let index = this.storeMusicList.findIndex((item) => {
+          return item.id === this.currentSong.id
+        })
         if (index > -1) {
           return 'active'
         }
@@ -157,15 +158,15 @@
         this.$emit('percentChange', this.touch.percent)
       },
       store () {
-        this.setStoreMusicList(this.currentSong.id)
+        this.setStoreMusicList(this.currentSong)
         if (this.storeCls.includes('active')) {
           this.$toast({
-            content: '已收藏<br/>可在个人中心中查找',
+            content: '已加入歌单',
             time: 1500
           })
         } else {
           this.$toast({
-            content: '已取消收藏',
+            content: '已移出歌单',
             time: 1500
           })
         }

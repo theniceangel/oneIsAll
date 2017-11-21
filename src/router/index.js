@@ -4,6 +4,8 @@ import Router from 'vue-router'
 const One = () => import('components/one/One')
 const All = () => import('components/all/All')
 const Me = () => import('components/me/Me')
+const MyWatch = () => import('components/mine/my-watch')
+const MySongsheet = () => import('components/mine/my-songsheet')
 Vue.use(Router)
 
 export default new Router({
@@ -30,7 +32,14 @@ export default new Router({
     {
       path: '/me',
       name: 'Me',
-      component: Me
+      component: Me,
+      children: [{
+        path: 'watch',
+        component: MyWatch
+      }, {
+        path: 'songsheet',
+        component: MySongsheet
+      }]
     }
   ]
 })

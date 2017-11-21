@@ -1,87 +1,90 @@
 <template>
   <transition name="slide-up">
+
     <div class="box" ref="box">
-    <!-- 轮播图-->
-    <div class="slide-wrapper" v-if="sliderImgs.length">
-      <div class="slide-content">
-        <slider>
-          <div v-for="item in sliderImgs">
-              <img :src="item.cover">
-          </div>
-        </slider>
-      </div>
-    </div>
-    <div class="content">
-      <!-- 分类导航-->
-      <div class="category-nav">
-        <div class="category-nav-title">分类导航</div>
-        <div class="category-nav-content">
-          <div class="category-nav-row clearfix">
-            <div class="category-item"><img src="~common/images/anwser.jpeg" alt=""><span>图文</span></div>
-            <div class="category-item"><img src="~common/images/question.jpeg" alt=""><span>问答</span></div>
-            <div class="category-item2"><img src="~common/images/read.jpeg" alt=""><span>阅读</span></div>
-          </div>
-          <div class="category-nav-row clearfix">
-            <div class="category-item"><img src="~common/images/lianzai.jpeg" alt=""><span>连载</span></div>
-            <div class="category-item"><img src="~common/images/movie.jpeg" alt=""><span>影视</span></div>
-            <div class="category-item"><img src="~common/images/music.jpeg" alt=""><span>音乐</span></div>
-            <div class="category-item last"><img src="~common/images/radio.jpeg" alt=""><span>电台</span></div>
-          </div>
+      <o-header></o-header>
+      <!-- 轮播图-->
+      <div class="slide-wrapper" v-if="sliderImgs.length">
+        <div class="slide-content">
+          <slider>
+            <div v-for="item in sliderImgs">
+                <img :src="item.cover">
+            </div>
+          </slider>
         </div>
       </div>
-      <!-- 近期热门作者-->
-      <div class="hot-author">
-        <div class="hot-author-title">近期热门作者</div>
-        <div class="hot-author-item" v-for="(author, index) in pickedAuthorList">
-          <img class="avatar" :src="author.web_url" alt="">
-          <div class="hot-author-intro">
-            <p class="hot-author-name">{{author.user_name}}</p>
-            <p class="hot-author-brief">{{author.desc}}</p>
+      <div class="content">
+        <!-- 分类导航-->
+        <div class="category-nav">
+          <div class="category-nav-title">分类导航</div>
+          <div class="category-nav-content">
+            <div class="category-nav-row clearfix">
+              <div class="category-item"><img src="~common/images/anwser.jpeg" alt=""><span>图文</span></div>
+              <div class="category-item"><img src="~common/images/question.jpeg" alt=""><span>问答</span></div>
+              <div class="category-item2"><img src="~common/images/read.jpeg" alt=""><span>阅读</span></div>
+            </div>
+            <div class="category-nav-row clearfix">
+              <div class="category-item"><img src="~common/images/lianzai.jpeg" alt=""><span>连载</span></div>
+              <div class="category-item"><img src="~common/images/movie.jpeg" alt=""><span>影视</span></div>
+              <div class="category-item"><img src="~common/images/music.jpeg" alt=""><span>音乐</span></div>
+              <div class="category-item last"><img src="~common/images/radio.jpeg" alt=""><span>电台</span></div>
+            </div>
           </div>
-          <span class="watch" :class="setWatchCls(author.user_id)" @click="setWatchAuthorList(author.user_id)">关注</span>
         </div>
-        <div class="hot-author-refresh">
-          <span @click.stop="refreshWatchAuthorList">换一换</span>
+        <!-- 近期热门作者-->
+        <div class="hot-author">
+          <div class="hot-author-title">近期热门作者</div>
+          <div class="hot-author-item" v-for="(author, index) in pickedAuthorList">
+            <img class="avatar" :src="author.web_url" alt="">
+            <div class="hot-author-intro">
+              <p class="hot-author-name">{{author.user_name}}</p>
+              <p class="hot-author-brief">{{author.desc}}</p>
+            </div>
+            <span class="watch" :class="setWatchCls(author.user_id)" @click="setWatchAuthorList(author)">关注</span>
+          </div>
+          <div class="hot-author-refresh">
+            <span @click.stop="refreshWatchAuthorList">换一换</span>
+          </div>
         </div>
-      </div>
-      <!-- 所有人问所有人-->
-      <div class="recommend-topic">
-        <div class="recommend-topic-title">所有人问所有人</div>
-        <div class="recommend-topic-wrapper">
-          <ul class="clearfix" ref="carouselWrapper"
-              @touchstart.prevent="recTouchStart"
-              @touchmove.prevent="recTouchMove"
-              @touchend="recTouchEnd">
-            <li v-for="topic in recommendTopics" ref="carouselItems">
-              <img  :src="topic.cover" alt="">
-              <p class="recommend-topic-title">{{topic.title}}</p>
+        <!-- 所有人问所有人-->
+        <div class="recommend-topic">
+          <div class="recommend-topic-title">所有人问所有人</div>
+          <div class="recommend-topic-wrapper">
+            <ul class="clearfix" ref="carouselWrapper"
+                @touchstart.prevent="recTouchStart"
+                @touchmove.prevent="recTouchMove"
+                @touchend="recTouchEnd">
+              <li v-for="topic in recommendTopics" ref="carouselItems">
+                <img  :src="topic.cover" alt="">
+                <p class="recommend-topic-title">{{topic.title}}</p>
+                <i><span>专题</span></i>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- 专题-->
+        <div class="topics">
+          <div class="topic-item"  v-for="topic in topicsList">
+            <div class="topic-item-img-wrapper">
+              <img :src="topic.cover" alt="">
               <i><span>专题</span></i>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- 专题-->
-      <div class="topics">
-        <div class="topic-item"  v-for="topic in topicsList">
-          <div class="topic-item-img-wrapper">
-            <img :src="topic.cover" alt="">
-            <i><span>专题</span></i>
+            </div>
+            <p class="topic-item-title">{{topic.title}}</p>
           </div>
-          <p class="topic-item-title">{{topic.title}}</p>
         </div>
+        <!-- loading 动画-->
+        <loading v-if="isBottom"></loading>
+        <!-- 没有更多数据了-->
+        <p class="no-more" v-if="noMore">{{noMoreText}}</p>
       </div>
-      <!-- loading 动画-->
-      <loading v-if="isBottom"></loading>
-      <!-- 没有更多数据了-->
-      <p class="no-more" v-if="noMore">{{noMoreText}}</p>
     </div>
-  </div>
   </transition>
 </template>
 <script>
   import slider from 'base/slider/slider'
   import loading from 'base/loading/loading'
-  import {findIndexInArray, getNoneDuplicateFromArr, getPrefixStyle} from 'common/js/util'
+  import OHeader from 'components/o-header/o-header'
+  import {getNoneDuplicateFromArr, getPrefixStyle} from 'common/js/util'
   import {mapMutations, mapGetters} from 'vuex'
   const TRANSFORM = getPrefixStyle('transform')
   const TRANSITION = getPrefixStyle('transition')
@@ -137,7 +140,9 @@
       },
       // 处理是否关注作者的样式
       setWatchCls (id) {
-        let index = findIndexInArray(this.watchAuthorList, id)
+        let index = this.watchAuthorList.findIndex((item) => {
+          return item.id === id
+        })
         if (index > -1) {
           return 'active'
         }
@@ -257,7 +262,8 @@
     },
     components: {
       slider,
-      loading
+      loading,
+      OHeader
     }
   }
 </script>
