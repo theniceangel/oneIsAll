@@ -40,7 +40,7 @@
           <span>我的歌单</span>
           <div>
             <i class="icon-chevron-right"></i>
-            <span>1</span>
+            <span v-if="songsheetCount">{{songsheetCount}}</span>
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@
 </template>
 <script>
   import {mapMutations} from 'vuex'
-  import {getWatchAuthorList} from 'common/js/cache'
+  import {getWatchAuthorList, getStoreMusicList} from 'common/js/cache'
   import Scroll from 'base/scroll/scroll'
   export default {
     data () {
@@ -84,6 +84,9 @@
     computed: {
       watchCount () {
         return getWatchAuthorList().length
+      },
+      songsheetCount () {
+        return getStoreMusicList().length
       }
     },
     mounted () {
@@ -109,9 +112,9 @@
     watch: {
       $route (newVal) {
         if (newVal.path.includes('watch') || newVal.path.includes('songsheet')) {
-          console.log(1111)
-          this.$refs.box1.style.bottom = '30px'
-          console.log(getComputedStyle(this.$refs.box1).bottom)
+          this.$nextTick(() => {
+            this.$refs.box1.style.bottom = 0
+          })
         }
       }
     },

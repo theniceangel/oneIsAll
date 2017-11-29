@@ -3,7 +3,7 @@
     <keep-alive>
       <router-view :key="$route.path"></router-view>
     </keep-alive>
-    <o-footer v-if="showFooter"></o-footer>
+    <o-footer v-show="showFooter"></o-footer>
     <!-- 播放器-->
     <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @ended="end" @timeupdate="updateTime"></audio>
     <!-- 贴在右上角的圆形播放器缩略图-->
@@ -90,9 +90,13 @@
           this.showHeader = true
         }
         if (newVal.path.includes('/watch') || newVal.path.includes('/songsheet')) {
-          this.showFooter = false
+          setTimeout(() => {
+            this.showFooter = false
+          }, 20)
         } else {
-          this.showFooter = true
+          setTimeout(() => {
+            this.showFooter = true
+          }, 20)
         }
       }
     },

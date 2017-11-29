@@ -6,7 +6,7 @@
         <span>我的歌单</span>
         <i class="icon-play-circle"></i>
       </div>
-      <div class="hot-author-item" v-for="(song, index) in songSheetList">
+      <div class="hot-author-item" v-for="(song, index) in storedSongsheetList">
         <img class="avatar" :src="song.coverUrl" alt="">
         <div class="hot-author-intro">
           <p class="hot-author-name">{{song.name}}</p>
@@ -22,6 +22,12 @@
     data () {
       return {
         songSheetList: getStoreMusicList()
+      }
+    },
+    computed: {
+      storedSongsheetList () {
+        let ret = this.songSheetList
+        return ret
       }
     },
     methods: {
@@ -42,6 +48,8 @@
     right 0
     width 100%
     height 100%
+    background url('~common/images/colored_bg_image.png') no-repeat center center
+    background-size cover
     z-index 2
     color: white
     background-color #f0eff4
