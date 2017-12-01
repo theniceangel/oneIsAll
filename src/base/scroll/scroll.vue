@@ -44,7 +44,8 @@
         if (!this.$refs.wrapper) return
         this.scroll = new BScroll(this.$refs.wrapper, {
           probeType: this.probeType,
-          click: this.click
+          click: this.click,
+          observeDOM: true
         })
         if (this.listenScroll) {
           this.scroll.on('scroll', (pos) => {
@@ -68,11 +69,6 @@
       }
     },
     watch: {
-      data () {
-        setTimeout(() => {
-          this.refresh()
-        }, this.refreshDelay)
-      }
     }
   }
 </script>
